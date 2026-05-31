@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/30 22:33:46 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/05/31 01:00:13 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/05/31 15:21:54 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,16 @@
 
 # include "Lexer.hpp"
 
-template <typename LexerTokenType>
 class LexerIterator
 {
 	public:
-	typedef typename Lexer<LexerTokenType>::token	token;
+	typedef Lexer::token	token;
 private:
 	std::vector<token>	_tokens;
 	size_t				_idx;
 	std::string			_error;
 public:
-	LexerIterator(const Lexer<LexerTokenType> &lexer): _tokens(lexer.tokens()), _idx(0), _error(lexer.error()) {};
+	LexerIterator(const Lexer &lexer): _tokens(lexer.tokens()), _idx(0), _error(lexer.error()) {};
 	LexerIterator(): _tokens(), _idx(0), _error() {};
 	~LexerIterator() {};
 
@@ -39,7 +38,7 @@ public:
 			std::cout << _tokens[i] << " ";
 	}
 
-	LexerIterator	&operator=(const Lexer<LexerTokenType> &lexer) { _tokens = lexer.tokens(); _error = lexer.error(); }
+	LexerIterator	&operator=(const Lexer &lexer) { _tokens = lexer.tokens(); _error = lexer.error(); return *this; }
 	operator bool() { return _idx < _tokens.size(); }
 	const token	&operator->() const
 	{

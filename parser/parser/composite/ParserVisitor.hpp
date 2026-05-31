@@ -1,26 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   ParserVisitor.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/30 20:23:50 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/05/31 14:56:45 by bruno-valer      ###   ########.fr       */
+/*   Created: 2026/05/31 15:42:20 by bruno-valer       #+#    #+#             */
+/*   Updated: 2026/05/31 15:45:07 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Lexer.hpp"
-#include "LexerBuilder.hpp"
+#ifndef PARSER_VISITOR_HPP
+# define PARSER_VISITOR_HPP
 
-int main()
+class Directive;
+class Block;
+
+struct ParserVisitor
 {
-	LexerIterator	lexer = LexerBuilder().withFile("example.config").withDefaultTokens().build();
-	if (!lexer.error().empty())
-	{
-		std::cout << lexer.error() << "\n";
-		return 1;
-	}
-	lexer.show();
-	return 0;
-}
+	virtual ~ParserVisitor() {};
+	virtual void	visit(Directive&) = 0;
+	virtual void	visit(Block&) = 0;
+};
+
+#endif

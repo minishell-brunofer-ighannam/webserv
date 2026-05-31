@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/30 10:13:58 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/05/30 10:22:25 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/05/31 09:38:52 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,8 @@
 template <typename T>
 class has_type
 {
-	private:
-		T	_type;
-
 	protected:
+		T	_type;
 		has_type(): _type() {};
 		void	setType(T type) { _type = type; }
 	public:
