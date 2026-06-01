@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/31 18:28:35 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/05/31 19:10:32 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/05/31 23:49:00 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <string>
 # include <iostream>
+# include <sstream>
 
 # include "ParserVisitor.hpp"
 # include "ParserComposite.hpp"
@@ -31,10 +32,16 @@ public:
 
 	void	visit(Directive &directive)
 	{
-		std::cout << getPrefix() << directive.name.getContent() << " -> ";
+		if (directive.name == ParserTokenType::PT_END) return;
+		std::stringstream	ss;
+		ss << getPrefix() << directive.name.getContent() << " -> ";
 		for (size_t i = 0; i < directive.values.size(); i++)
-			std::cout << directive.values[i].getContent() << " ";
-		std::cout << "\n";
+		{
+			if (directive.values[i] == ParserTokenType::PT_END) return;
+			ss << directive.values[i].getContent() << " ";
+		}
+		ss << "\n";
+		std::cout << ss.str();
 	}
 
 	void	visit(Block &block)

@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/31 14:09:14 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/05/31 19:12:20 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/05/31 23:46:07 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ private:
 		opts_iterator	blk_it = _block_keywords.find(token.getContent());
 		if (blk_it != _block_keywords.end())
 			return ParserToken::fromLexerToken(token, blk_it->second);
+
+		if (token == LexerTokenType::END) return ParserToken::fromLexerToken(token, ParserTokenType::PT_END);
 
 		return ParserToken::fromLexerToken(token, ParserTokenType::PT_WORD);
 	}
