@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LexerBuilder.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
+/*   By: brunofer <brunofer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/31 00:29:16 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/05/31 16:44:47 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/02 15:28:16 by brunofer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ public:
 	LexerBuilder	&withFile(const std::string file_name) { _lexer.setFile(file_name); return *this; }
 	LexerBuilder	&withDefaultTokens() {
 		_lexer.addComment("#");
-		_lexer.addDelimitter("{", LexerTokenType::LBRACE);
-		_lexer.addDelimitter("}", LexerTokenType::RBRACE);
-		_lexer.addDelimitter(";", LexerTokenType::SEMICOLON);
+		_lexer.addDelimitter("{", LBRACE);
+		_lexer.addDelimitter("}", RBRACE);
+		_lexer.addDelimitter(";", SEMICOLON);
 		_lexer.addQuote("\"");
 		_lexer.addQuote("'");
 		return *this;

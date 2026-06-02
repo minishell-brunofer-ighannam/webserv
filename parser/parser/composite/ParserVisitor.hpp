@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ParserVisitor.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
+/*   By: brunofer <brunofer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/31 15:42:20 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/05/31 15:45:07 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/02 14:18:24 by brunofer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSER_VISITOR_HPP
 # define PARSER_VISITOR_HPP
 
-class Directive;
-class Block;
+struct Directive;
+struct Block;
 
 struct ParserVisitor
 {

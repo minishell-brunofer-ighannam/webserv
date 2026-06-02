@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ParserVisitorPrinter.hpp                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
+/*   By: brunofer <brunofer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/31 18:28:35 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/05/31 23:49:00 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/02 15:28:28 by brunofer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ public:
 
 	void	visit(Directive &directive)
 	{
-		if (directive.name == ParserTokenType::PT_END) return;
+		if (directive.name == PT_END) return;
 		std::stringstream	ss;
 		ss << getPrefix() << directive.name.getContent() << " -> ";
 		for (size_t i = 0; i < directive.values.size(); i++)
 		{
-			if (directive.values[i] == ParserTokenType::PT_END) return;
+			if (directive.values[i] == PT_END) return;
 			ss << directive.values[i].getContent() << " ";
 		}
 		ss << "\n";

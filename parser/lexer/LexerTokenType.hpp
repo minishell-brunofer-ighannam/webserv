@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LexerTokenType.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
+/*   By: brunofer <brunofer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/31 11:51:17 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/05/31 11:51:58 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/02 15:31:25 by brunofer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   File.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
+/*   By: brunofer <brunofer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/30 19:50:46 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/05/31 00:47:19 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/02 15:29:13 by brunofer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ private:
 
 	void	_readFile()
 	{
-		std::ifstream file(_name);
+		std::ifstream file(_name.c_str());
 		if (!file.is_open())
 		{
 			_error = "Cannot open file '" + _name + "'.";

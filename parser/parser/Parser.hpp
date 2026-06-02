@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parser.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
+/*   By: brunofer <brunofer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/31 14:09:14 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/05/31 23:46:07 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/02 15:19:06 by brunofer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ public:
 		ParserAst	ast;
 		if (!_it.error().empty())
 			ast.addError(_it.error());
-		Block	*root = new Block(ParserToken("root", 0, 0, "root", ParserTokenType::PT_WORD));
+		Block	*root = new Block(ParserToken("root", 0, 0, "root", ParserTokenType::PT_MAIN));
 		while (_it)
 		{
 			_skipComments();

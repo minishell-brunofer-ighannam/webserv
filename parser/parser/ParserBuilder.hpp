@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ParserBuilder.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
+/*   By: brunofer <brunofer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/31 17:40:15 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/05/31 19:01:44 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/02 16:22:26 by brunofer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,13 @@ public:
 
 	ParserBuilder	&withDefaultDirectives()
 	{
+		_parser.addDirectiveKeyword("worker_process", ParserTokenType::PT_WORKER_PROCESSES);
+		_parser.addDirectiveKeyword("worker_connections", ParserTokenType::PT_WORKER_CONNECTIONS);
+		_parser.addDirectiveKeyword("expires", ParserTokenType::PT_EXPIRES);
+		_parser.addDirectiveKeyword("access_log", ParserTokenType::PT_ACCESS_LOG);
+		_parser.addDirectiveKeyword("error_page", ParserTokenType::PT_ERROR_PAGE);
+		_parser.addDirectiveKeyword("try_files", ParserTokenType::PT_TRY_FILES);
+		_parser.addDirectiveKeyword("add_header", ParserTokenType::PT_ADD_HEADER);
 		_parser.addDirectiveKeyword("listen", ParserTokenType::PT_LISTEN);
 		_parser.addDirectiveKeyword("server_name", ParserTokenType::PT_SERVER_NAME);
 		_parser.addDirectiveKeyword("root", ParserTokenType::PT_ROOT);
