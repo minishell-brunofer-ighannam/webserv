@@ -13,8 +13,8 @@
 #ifndef PARSER_VISITOR_HPP
 # define PARSER_VISITOR_HPP
 
-class Directive;
-class Block;
+struct Directive;
+struct Block;
 
 struct ParserVisitor
 {
