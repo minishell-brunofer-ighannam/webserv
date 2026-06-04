@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/02 17:28:35 by brunofer          #+#    #+#             */
-/*   Updated: 2026/06/04 14:00:41 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/04 14:28:55 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,14 @@ public:
 
 	void	visit(Directive &directive)
 	{
-		if (directive.name == PT_END) return;
+		if (directive.name == PT_END || directive.name == PT_WORD) return;
 		_arg_amount_validator.validate(directive);
 		_arg_amount_validator.dumpErrorsOn(_errors);
 	};
 
 	void	visit(Block &block)
 	{
-		if (block.name == PT_END) return;
+		if (block.name == PT_END || block.name == PT_WORD) return;
 		if (block.name != PT_MAIN)
 			_arg_amount_validator.validate(block);
 		_arg_amount_validator.dumpErrorsOn(_errors);

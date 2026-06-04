@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 16:47:55 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/04 14:18:59 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/04 14:28:20 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,15 @@ class ScopeValidator
 			for (size_t i = 0; i < scopes.size(); i++)
 			{
 				resp += ParserTokenTypeStr[scopes[i]];
-				resp += " ";
+				if (i < scopes.size() - 1)
+					resp += ", ";
 			}
 			return resp;
 		}
 
 		void	_validateScopeFrom(ParserToken	&name, Validations &validator)
 		{
-			if (name == PT_END) return;
+			if (name == PT_END || name == PT_WORD) return;
 			Validations::iterator validator_it = validator.find(name.getType());
 			if (validator_it == validator.end())
 			{
