@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 19:59:52 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/04 13:59:50 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/04 18:23:28 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,43 @@
 # include "ParserTokenType.hpp"
 # include "ParserComposite.hpp"
 
+/**
+ * @brief Validador da quantidade de argumentos de nós da AST.
+ *
+ * Verifica se uma diretiva ou bloco possui uma quantidade de
+ * argumentos compatível com as regras configuradas.
+ *
+ * Cada regra é definida através de um schema responsável por
+ * validar a quantidade mínima e máxima permitida.
+ */
 class ArgAmountValidator
 {
 private:
+	/**
+	 * @brief Alias para o mapa de validações.
+	 *
+	 * Associa um tipo de token ao schema responsável por validar
+	 * sua quantidade de argumentos.
+	 */
 	typedef std::map<ParserTokenType, schema::detail::integer_base<unsigned> > Validations;
-	std::map<ParserTokenType, schema::detail::integer_base<unsigned> >	_validations;
-	std::vector<std::string>	_errors;
+	std::map<ParserTokenType, schema::detail::integer_base<unsigned> >	_validations; // @brief Regras de validação cadastradas.
+	std::vector<std::string>	_errors; // @brief Lista de erros encontrados durante a validação.
 public:
+	// @brief Constrói um validador vazio.
 	ArgAmountValidator() {};
 	~ArgAmountValidator() {};
 
+	/**
+	 * @brief Valida a quantidade de argumentos de um nó.
+	 *
+	 * Procura a regra correspondente ao tipo do nó e verifica
+	 * se o número de argumentos fornecidos é válido.
+	 *
+	 * Caso não exista regra para o tipo informado ou a
+	 * validação falhe, um erro é registrado.
+	 *
+	 * @param node Nó a ser validado.
+	 */
 	void	validate(const ParserNode &node)
 	{
 		Validations::iterator	it = _validations.find(node.name.getType());
@@ -48,11 +75,24 @@ public:
 				_errors.push_back(resp.errors[i].format());
 	}
 
+	/**
+	 * @brief Registra uma nova regra de validação.
+	 *
+	 * @param type Tipo do nó.
+	 * @param validation Schema responsável pela validação.
+	 */
 	void	addValidation(ParserTokenType type, schema::detail::integer_base<unsigned> validation)
 	{
 		_validations[type] = validation;
 	}
 
+	/**
+	 * @brief Move os erros acumulados para outro vetor.
+	 *
+	 * Após a operação a lista interna de erros é limpa.
+	 *
+	 * @param destine Vetor de destino.
+	 */
 	void	dumpErrorsOn(std::vector<std::string> &destine)
 	{
 		for (size_t i = 0; i < _errors.size(); i++)
@@ -61,22 +101,74 @@ public:
 	}
 };
 
+/**
+ * @brief Builder responsável pela configuração de
+ * ArgAmountValidator.
+ *
+ * Permite registrar validações individualmente ou utilizar
+ * um conjunto padrão compatível com diretivas Nginx.
+ */
 class ArgAmountValidatorBuilder
 {
 private:
-	ArgAmountValidator	_validator;
+	ArgAmountValidator	_validator; // @brief Validador em construção.
 public:
+	// @brief Constrói um builder vazio.
 	ArgAmountValidatorBuilder() {};
 	~ArgAmountValidatorBuilder() {};
 
+	/**
+	 * @brief Cria um validador com as regras padrão.
+	 *
+	 * Configura automaticamente as validações de quantidade
+	 * de argumentos para blocos e diretivas conhecidas.
+	 *
+	 * @return Validador configurado.
+	 */
 	static ArgAmountValidator	defaultValidations()
 	{
 		ArgAmountValidatorBuilder builder;
 		return builder.withDefaultValidations().build();
 	}
 
+	/**
+	 * @brief Finaliza a construção do validador.
+	 *
+	 * @return Instância configurada de ArgAmountValidator.
+	 */
 	ArgAmountValidator			build() { return _validator; }
 
+	/**
+	 * @brief Registra todas as validações padrão.
+	 *
+	 * Configura regras para diretivas como:
+	 *
+	 * - listen
+	 *
+	 * - server_name
+	 *
+	 * - root
+	 *
+	 * - include
+	 *
+	 * - ssl_protocols
+	 *
+	 * - proxy_pass
+	 *
+	 * - entre outras.
+	 *
+	 * Também configura validações para blocos como:
+	 *
+	 * - http
+	 *
+	 * - server
+	 *
+	 * - location
+	 *
+	 * - upstream
+	 *
+	 * @return Referência para o builder.
+	 */
 	ArgAmountValidatorBuilder	&withDefaultValidations()
 	{
 		static unsigned int	unlimited = std::numeric_limits<unsigned>::max();
@@ -123,6 +215,14 @@ public:
 		.add(PT_FASTCGI_INDEX, schema::uint32().between(1, 1).name("fastcgi_index args amount"));
 	}
 
+	/**
+	 * @brief Adiciona uma validação personalizada.
+	 *
+	 * @param type Tipo do nó validado.
+	 * @param validation Regra utilizada para validação.
+	 *
+	 * @return Referência para o builder.
+	 */
 	ArgAmountValidatorBuilder	&add(ParserTokenType type, schema::detail::integer_base<unsigned> validation)
 	{
 		_validator.addValidation(type, validation);

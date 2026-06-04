@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/31 17:40:15 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/04 13:13:14 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/04 17:52:14 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,34 @@
 
 # include "Parser.hpp"
 
+/**
+ * @brief Builder responsável pela configuração e criação de parsers.
+ *
+ * Fornece uma interface fluente para registrar palavras-chave,
+ * modificadores e configurações do lexer antes de executar a
+ * análise sintática e gerar a AST.
+ */
 class ParserBuilder
 {
 private:
-	Parser			_parser;
-	LexerBuilder	_lexer_builder;
+	Parser			_parser; // @brief Instância do parser em construção.
+	LexerBuilder	_lexer_builder; // @brief Builder utilizado para configurar o lexer.
 public:
+	// @brief Constrói um builder vazio.
 	ParserBuilder(): _parser() {};
 	~ParserBuilder() {};
 
+	/**
+	 * @brief Cria um builder pré-configurado com as opções padrão.
+	 *
+	 * Configura:
+	 * - Lexer padrão
+	 * - Blocos padrão
+	 * - Diretivas padrão
+	 * - Modificadores padrão
+	 *
+	 * @return Builder configurado.
+	 */
 	static	ParserBuilder	defaultBuilder()
 	{
 		return ParserBuilder()
@@ -31,8 +50,21 @@ public:
 			.withDefaultLexer().withDefaultModifiers();
 	}
 
+	/**
+	 * @brief Executa o parser e gera a AST.
+	 *
+	 * @return Árvore sintática produzida pela análise.
+	 */
 	ParserAst			build() { return _parser.parse(); }
 
+	/**
+	 * @brief Configura o lexer padrão.
+	 *
+	 * Adiciona comentários, delimitadores e aspas utilizados
+	 * normalmente em arquivos de configuração compatíveis com Nginx.
+	 *
+	 * @return Referência para o builder.
+	 */
 	ParserBuilder	&withDefaultLexer()
 	{
 		_lexer_builder = LexerBuilder().withDefaultTokens();
@@ -40,6 +72,11 @@ public:
 		return *this;
 	}
 
+	/**
+	 * @brief Registra todas as diretivas padrão suportadas.
+	 *
+	 * @return Referência para o builder.
+	 */
 	ParserBuilder	&withDefaultDirectives()
 	{
 		_parser.addDirectiveKeyword("worker_processes", ParserTokenType::PT_WORKER_PROCESSES);
@@ -80,6 +117,21 @@ public:
 		return *this;
 	}
 
+	/**
+	 * @brief Registra todos os blocos padrão suportados.
+	 *
+	 * Exemplos:
+	 *
+	 * - http
+	 *
+	 * - server
+	 *
+	 * - location
+	 *
+	 * - upstream
+	 *
+	 * @return Referência para o builder.
+	 */
 	ParserBuilder	&withDefaultBlocks()
 	{
 		_parser.addBlockKeyword("http", ParserTokenType::PT_HTTP);
@@ -95,6 +147,21 @@ public:
 		return *this;
 	}
 
+	/**
+	 * @brief Registra os modificadores padrão de location.
+	 *
+	 * Exemplos:
+	 *
+	 * - =
+	 *
+	 * - ~
+	 *
+	 * - ~*
+	 *
+	 * - ^~
+	 *
+	 * @return Referência para o builder.
+	 */
 	ParserBuilder	&withDefaultModifiers()
 	{
 		_parser.addModifier("=", ParserTokenType::PT_MOD_EXACT);
@@ -104,22 +171,58 @@ public:
 		return *this;
 	}
 
+	/**
+	 * @brief Registra uma diretiva personalizada.
+	 *
+	 * @param content Nome da diretiva.
+	 * @param type Tipo associado.
+	 *
+	 * @return Referência para o builder.
+	 */
 	ParserBuilder	&withDirective(const std::string &content, ParserTokenType type)
 	{
 		_parser.addDirectiveKeyword(content, type);
 		return *this;
 	}
+
+	/**
+	 * @brief Registra um bloco personalizado.
+	 *
+	 * @param content Nome do bloco.
+	 * @param type Tipo associado.
+	 *
+	 * @return Referência para o builder.
+	 */
 	ParserBuilder	&withBlock(const std::string &content, ParserTokenType type)
 	{
 		_parser.addBlockKeyword(content, type);
 		return *this;
 	}
+
+	/**
+	 * @brief Registra um modificador personalizado.
+	 *
+	 * @param content Texto do modificador.
+	 * @param type Tipo associado.
+	 *
+	 * @return Referência para o builder.
+	 */
 	ParserBuilder	&withModifier(const std::string &content, ParserTokenType type)
 	{
 		_parser.addModifier(content, type);
 		return *this;
 	}
 
+	/**
+	 * @brief Define o arquivo que será analisado.
+	 *
+	 * Atualiza a configuração do lexer interno para utilizar
+	 * o arquivo informado.
+	 *
+	 * @param file_name Caminho do arquivo.
+	 *
+	 * @return Referência para o builder.
+	 */
 	ParserBuilder	&withFile(const std::string &file_name)
 	{
 		_lexer_builder.withFile(file_name);
