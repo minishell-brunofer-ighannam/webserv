@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/02 17:28:35 by brunofer          #+#    #+#             */
-/*   Updated: 2026/06/04 02:25:50 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/04 14:00:41 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,16 @@ public:
 
 	void	visit(Directive &directive)
 	{
+		if (directive.name == PT_END) return;
 		_arg_amount_validator.validate(directive);
 		_arg_amount_validator.dumpErrorsOn(_errors);
 	};
 
 	void	visit(Block &block)
 	{
-		_arg_amount_validator.validate(block);
+		if (block.name == PT_END) return;
+		if (block.name != PT_MAIN)
+			_arg_amount_validator.validate(block);
 		_arg_amount_validator.dumpErrorsOn(_errors);
 
 		_scope_validator.pushScope(block.name.getType());
@@ -52,6 +55,8 @@ public:
 			block.children[i]->accept(*this);
 		_scope_validator.popScope();
 	};
+
+	const std::vector<std::string> &getErrors() const { return _errors; }
 };
 
 #endif

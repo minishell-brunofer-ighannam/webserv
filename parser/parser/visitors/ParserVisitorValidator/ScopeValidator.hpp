@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 16:47:55 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/04 02:19:25 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/04 14:18:59 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,11 @@ class ScopeValidator
 
 		void	_validateScopeFrom(ParserToken	&name, Validations &validator)
 		{
+			if (name == PT_END) return;
 			Validations::iterator validator_it = validator.find(name.getType());
 			if (validator_it == validator.end())
 			{
-				std::string msg = name.getContent() + " scope not found.";
+				std::string msg = name.getContent() + " " + ParserTokenTypeStr[name.getType()] + " scope not found.";
 				_errors.push_back(msg);
 				return;
 			}
@@ -53,7 +54,7 @@ class ScopeValidator
 			std::vector<ParserTokenType>::iterator scope_it = std::find(scopes.begin(), scopes.end(), _curr_scopes[_curr_scopes.size() - 1]);
 			if (scope_it == scopes.end())
 			{
-				std::string msg = name.getContent() + " in wrong context. Must be in scopes '" + _getStringTypes(scopes) + "'";
+				std::string msg = name.getLineAddress() + " " + name.getContent() + " in wrong context. Must be in scopes '" + _getStringTypes(scopes) + "'";
 				_errors.push_back(msg);
 			}
 		}
@@ -120,12 +121,28 @@ class ScopeValidatorBuilder
 		ScopeValidatorBuilder	&withDefaultDirectiveScopes()
 		{
 			return withDirectiveOnScope(PT_WORKER_PROCESSES, PT_MAIN)
+				.withDirectiveOnScope(PT_PID, PT_MAIN)
+				.withDirectiveOnScope(PT_WORKER_PROCESSES, PT_MAIN)
+				.withDirectiveOnScope(PT_INCLUDE, PT_MAIN).andOn(PT_HTTP).andOn(PT_SERVER).andOn(PT_LOCATION).andOn(PT_UPSTREAM)
+					.andOn(PT_EVENTS).andOn(PT_STREAM).andOn(PT_GEO).andOn(PT_MAP).andOn(PT_TYPES).andOn(PT_LIMIT_EXCEPT)
+				.withDirectiveOnScope(DEFAULT_TYPE, PT_HTTP)
+				.withDirectiveOnScope(SENDFILE, PT_HTTP)
+				.withDirectiveOnScope(KEEPALIVE_TIMEOUT, PT_HTTP)
+				.withDirectiveOnScope(PT_LOG_FORMAT, PT_HTTP)
+				.withDirectiveOnScope(PT_ERROR_LOG, PT_MAIN).andOn(PT_HTTP).andOn(PT_SERVER)
+				.withDirectiveOnScope(PT_CLIENT_MAX_BODY_SIZE, PT_HTTP).andOn(PT_SERVER)
+				.withDirectiveOnScope(PT_USE, PT_EVENTS)
+				.withDirectiveOnScope(MULTI_ACCEPT, PT_EVENTS)
 				.withDirectiveOnScope(PT_WORKER_CONNECTIONS, PT_EVENTS)
+				.withDirectiveOnScope(PT_SERVER_DIRECTIVE, PT_UPSTREAM)
+				.withDirectiveOnScope(PT_RETURN, PT_SERVER)
+				.withDirectiveOnScope(PT_REWRITE, PT_SERVER)
 				.withDirectiveOnScope(PT_LISTEN, PT_SERVER)
 				.withDirectiveOnScope(PT_SERVER_NAME, PT_SERVER)
 				.withDirectiveOnScope(PT_SSL_CERTIFICATE, PT_SERVER)
 				.withDirectiveOnScope(PT_SSL_CERTIFICATE_KEY, PT_SERVER)
 				.withDirectiveOnScope(PT_SSL_PROTOCOLS, PT_SERVER)
+				.withDirectiveOnScope(PT_SSL_CIPHERS, PT_SERVER)
 				.withDirectiveOnScope(PT_PROXY_PASS, PT_LOCATION)
 				.withDirectiveOnScope(PT_FASTCGI_PASS, PT_LOCATION)
 				.withDirectiveOnScope(PT_EXPIRES, PT_LOCATION)
@@ -134,6 +151,12 @@ class ScopeValidatorBuilder
 				.withDirectiveOnScope(PT_ACCESS_LOG, PT_LOCATION).andOn(PT_HTTP).andOn(PT_SERVER)
 				.withDirectiveOnScope(PT_ERROR_PAGE, PT_LOCATION).andOn(PT_HTTP).andOn(PT_SERVER)
 				.withDirectiveOnScope(PT_ADD_HEADER, PT_LOCATION).andOn(PT_HTTP).andOn(PT_SERVER)
+				.withDirectiveOnScope(PT_AUTOINDEX, PT_LOCATION).andOn(PT_HTTP).andOn(PT_SERVER)
+				.withDirectiveOnScope(PT_LOG_NOT_FOUND, PT_LOCATION).andOn(PT_HTTP).andOn(PT_SERVER)
+				.withDirectiveOnScope(PT_PROXY_SET_HEADER, PT_LOCATION).andOn(PT_HTTP).andOn(PT_SERVER)
+				.withDirectiveOnScope(PT_FASTCGI_INDEX, PT_LOCATION).andOn(PT_HTTP).andOn(PT_SERVER)
+				.withDirectiveOnScope(PT_FASTCGI_PARAM, PT_LOCATION).andOn(PT_HTTP).andOn(PT_SERVER)
+				.withDirectiveOnScope(PT_PROXY_CACHE_BYPASS, PT_LOCATION).andOn(PT_HTTP).andOn(PT_SERVER)
 				.withDirectiveOnScope(PT_TRY_FILES, PT_LOCATION).andOn(PT_SERVER);
 		}
 

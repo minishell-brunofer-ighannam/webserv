@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/31 17:40:15 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/04 00:57:45 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/04 13:13:14 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,13 @@ public:
 	ParserBuilder(): _parser() {};
 	~ParserBuilder() {};
 
+	static	ParserBuilder	defaultBuilder()
+	{
+		return ParserBuilder()
+			.withDefaultBlocks().withDefaultDirectives()
+			.withDefaultLexer().withDefaultModifiers();
+	}
+
 	ParserAst			build() { return _parser.parse(); }
 
 	ParserBuilder	&withDefaultLexer()
@@ -35,7 +42,22 @@ public:
 
 	ParserBuilder	&withDefaultDirectives()
 	{
-		_parser.addDirectiveKeyword("worker_process", ParserTokenType::PT_WORKER_PROCESSES);
+		_parser.addDirectiveKeyword("worker_processes", ParserTokenType::PT_WORKER_PROCESSES);
+		_parser.addDirectiveKeyword("error_log", ParserTokenType::PT_ERROR_LOG);
+		_parser.addDirectiveKeyword("pid", ParserTokenType::PT_PID);
+		_parser.addDirectiveKeyword("use", ParserTokenType::PT_USE);
+		_parser.addDirectiveKeyword("multi_accept", ParserTokenType::MULTI_ACCEPT);
+		_parser.addDirectiveKeyword("default_type", ParserTokenType::DEFAULT_TYPE);
+		_parser.addDirectiveKeyword("sendfile", ParserTokenType::SENDFILE);
+		_parser.addDirectiveKeyword("keepalive_timeout", ParserTokenType::KEEPALIVE_TIMEOUT);
+		_parser.addDirectiveKeyword("log_format", ParserTokenType::PT_LOG_FORMAT);
+		_parser.addDirectiveKeyword("autoindex", ParserTokenType::PT_AUTOINDEX);
+		_parser.addDirectiveKeyword("client_max_body_size", ParserTokenType::PT_CLIENT_MAX_BODY_SIZE);
+		_parser.addDirectiveKeyword("log_not_found", ParserTokenType::PT_LOG_NOT_FOUND);
+		_parser.addDirectiveKeyword("proxy_set_header", ParserTokenType::PT_PROXY_SET_HEADER);
+		_parser.addDirectiveKeyword("proxy_cache_bypass", ParserTokenType::PT_PROXY_CACHE_BYPASS);
+		_parser.addDirectiveKeyword("fastcgi_index", ParserTokenType::PT_FASTCGI_INDEX);
+		_parser.addDirectiveKeyword("fastcgi_param", ParserTokenType::PT_FASTCGI_PARAM);
 		_parser.addDirectiveKeyword("worker_connections", ParserTokenType::PT_WORKER_CONNECTIONS);
 		_parser.addDirectiveKeyword("expires", ParserTokenType::PT_EXPIRES);
 		_parser.addDirectiveKeyword("access_log", ParserTokenType::PT_ACCESS_LOG);
@@ -54,6 +76,7 @@ public:
 		_parser.addDirectiveKeyword("ssl_certificate", ParserTokenType::PT_SSL_CERTIFICATE);
 		_parser.addDirectiveKeyword("ssl_certificate_key", ParserTokenType::PT_SSL_CERTIFICATE_KEY);
 		_parser.addDirectiveKeyword("ssl_protocols", ParserTokenType::PT_SSL_PROTOCOLS);
+		_parser.addDirectiveKeyword("ssl_ciphers", ParserTokenType::PT_SSL_CIPHERS);
 		return *this;
 	}
 

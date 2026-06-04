@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 21:59:54 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/03 23:31:51 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/04 12:52:41 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ namespace schema
 				return *this;
 			}
 
-			path_base	&directory(const std::string msg = "")
+			path_base	&file(const std::string msg = "")
 			{
 				_validators_for_existing.push_back([this, &msg](const std::string &value) -> std::string {
 					if (!S_ISREG(_st.st_mode))

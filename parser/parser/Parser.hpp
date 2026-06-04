@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/31 14:09:14 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/04 03:21:22 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/04 13:31:40 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,8 @@ private:
 			return block;
 		}
 		++_it; // consome ; SEMICOLON
+		if (name == PT_SERVER)
+			name.setType(PT_SERVER_DIRECTIVE);
 		Directive	*directive = new Directive(name, values);
 		return directive;
 	}

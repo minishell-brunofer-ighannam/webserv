@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 19:59:52 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/04 02:19:29 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/04 13:59:50 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ public:
 		Validations::iterator	it = _validations.find(node.name.getType());
 		if (it == _validations.end())
 		{
-			std::string msg = "Type" + std::string(ParserTokenTypeStr[node.name.getType()]);
-			msg += " not found on validations.";
+			std::string msg = "Type " + std::string(ParserTokenTypeStr[node.name.getType()]);
+			msg += " not found on arg_amount_validations.";
 			_errors.push_back(msg);
 			return;
 		}
@@ -108,7 +108,19 @@ public:
 		.add(PT_CLIENT_MAX_BODY_SIZE, schema::uint32().between(1, 1).name("client_max_body_size args amount"))
 		.add(PT_LOG_FORMAT, schema::uint32().between(2, unlimited).name("log_format args amount"))
 		.add(PT_ACCESS_LOG, schema::uint32().between(1, 2).name("access_log args amount"))
-		.add(PT_RETURN, schema::uint32().between(1, 2).name("return args amount"));
+		.add(PT_RETURN, schema::uint32().between(1, 2).name("return args amount"))
+
+		.add(PT_USE, schema::uint32().between(1, 1).name("use args amount"))
+		.add(MULTI_ACCEPT, schema::uint32().between(1, 1).name("multi_accept args amount"))
+		.add(PT_INCLUDE, schema::uint32().between(1, unlimited).name("include args amount"))
+		.add(DEFAULT_TYPE, schema::uint32().between(1, 1).name("default_type args amount"))
+		.add(SENDFILE, schema::uint32().between(1, 1).name("sendfile args amount"))
+		.add(KEEPALIVE_TIMEOUT, schema::uint32().between(1, 2).name("keepalive_timeout args amount"))
+		.add(PT_SERVER_DIRECTIVE, schema::uint32().between(1, unlimited).name("upstream server args amount"))
+		.add(PT_AUTOINDEX, schema::uint32().between(1, 1).name("autoindex args amount"))
+		.add(PT_LOG_NOT_FOUND, schema::uint32().between(1, 1).name("log_not_found args amount"))
+		.add(PT_PROXY_CACHE_BYPASS, schema::uint32().between(1, unlimited).name("proxy_cache_bypass args amount"))
+		.add(PT_FASTCGI_INDEX, schema::uint32().between(1, 1).name("fastcgi_index args amount"));
 	}
 
 	ArgAmountValidatorBuilder	&add(ParserTokenType type, schema::detail::integer_base<unsigned> validation)
