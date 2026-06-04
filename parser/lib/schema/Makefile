@@ -1,6 +1,6 @@
-NAME = parser
+NAME = validation
 
-INCLUDES = $(shell find ../.. -name ".git" -prune -o -type d -print | sed 's/^/\-I /' | tr "\n" " ")
+INCLUDES = -I ../text -I ../utils -I ../structure -I ../segregation
 
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++11 -g3 $(INCLUDES)
@@ -11,12 +11,7 @@ OBJ = $(SRC:%.cpp=%.o)
 
 all: $(NAME)
 
-includes:
-	@echo $(INCLUDES)
-
-retry:
-	@clear
-	@$(MAKE) -s re
+dijkstra: re
 	@clear
 	@./$(NAME)
 
@@ -33,6 +28,10 @@ fclean: clean
 	@rm -rf $(NAME)
 
 re: fclean all
+
+retry: re
+	@clear
+	@./$(NAME)
 
 valrind: re
 	valgrind --track-origins=yes --show-leak-kinds=all --leak-check=full ./$(NAME)

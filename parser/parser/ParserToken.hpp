@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/31 11:02:08 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/05/31 18:34:59 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/03 11:45:13 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@
 # include "LexerToken.hpp"
 # include "ParserTokenType.hpp"
 
-class ParserToken: public has_type<ParserTokenType>
+class ParserToken: public segregation::has_type<ParserTokenType>
 {
-	typedef has_type<ParserTokenType>	base;
+	typedef segregation::has_type<ParserTokenType>	base;
 private:
 	std::string	_file_name;
 	size_t		_line;

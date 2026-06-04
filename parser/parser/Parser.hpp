@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parser.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brunofer <brunofer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/31 14:09:14 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/02 15:19:06 by brunofer         ###   ########.fr       */
+/*   Updated: 2026/06/04 03:21:22 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ private:
 	std::map<std::string, ParserTokenType>	_block_keywords;
 	std::map<std::string, ParserTokenType>	_directive_keywords;
 	std::map<std::string, ParserTokenType>	_modifiers;
+	std::vector<std::string>				_errors;
 
 	typedef	std::map<std::string, ParserTokenType>::iterator opts_iterator;
 
@@ -51,13 +52,13 @@ private:
 				return ParserToken::fromLexerToken(token, modif_it->second);
 		}
 
-		opts_iterator	dir_it = _directive_keywords.find(token.getContent());
-		if (dir_it != _directive_keywords.end())
-			return ParserToken::fromLexerToken(token, dir_it->second);
+		opts_iterator	direct_it = _directive_keywords.find(token.getContent());
+		if (direct_it != _directive_keywords.end())
+			return ParserToken::fromLexerToken(token, direct_it->second);
 
-		opts_iterator	blk_it = _block_keywords.find(token.getContent());
-		if (blk_it != _block_keywords.end())
-			return ParserToken::fromLexerToken(token, blk_it->second);
+		opts_iterator	block_it = _block_keywords.find(token.getContent());
+		if (block_it != _block_keywords.end())
+			return ParserToken::fromLexerToken(token, block_it->second);
 
 		if (token == LexerTokenType::END) return ParserToken::fromLexerToken(token, ParserTokenType::PT_END);
 
@@ -69,6 +70,8 @@ private:
 		_skipComments();
 
 		ParserToken	name = _convertToken(*_it);
+		if (name == PT_WORD)
+			_errors.push_back((*_it).getLineAddress() + " Invalid node name!");
 		++_it;
 
 		bool	is_after_location = name == ParserTokenType::PT_LOCATION;
@@ -78,12 +81,15 @@ private:
 			&& *_it != LexerTokenType::LBRACE
 			&& *_it != LexerTokenType::SEMICOLON)
 		{
+			if (*_it == LexerTokenType::RBRACE)
+				_errors.push_back((*_it).getLineAddress() + " Closing an unopened scope!");
 			values.push_back(_convertToken(*_it, is_after_location));
 			is_after_location = false;
 			++_it;
 		}
 		if (*_it == LexerTokenType::LBRACE)
 		{
+			LexerIterator::token	lbrace = *_it;
 			++_it; // consome { LBRACE
 			Block	*block = new Block(name, values);
 			while (_it && *_it != LexerTokenType::RBRACE)
@@ -91,8 +97,10 @@ private:
 				_skipComments();
 				if (!_it || *_it == LexerTokenType::LBRACE)
 					break;
-				block->_children.push_back(parseStatement());
+				block->children.push_back(parseStatement());
 			}
+			if (*_it != LexerTokenType::RBRACE)
+				_errors.push_back(lbrace.getLineAddress() + " Unclosed scope");
 			++_it; // consome } RBRACE
 			return block;
 		}
@@ -123,8 +131,10 @@ public:
 			_skipComments();
 			if (!_it)
 				break;
-			root->_children.push_back(parseStatement());
+			root->children.push_back(parseStatement());
 		}
+		for (size_t i = 0; i < _errors.size(); i++)
+			ast.addError(_errors[i]);
 		ast.setRoot(root);
 		return ast;
 	}

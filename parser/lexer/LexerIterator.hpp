@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/30 22:33:46 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/05/31 15:21:54 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/04 03:01:59 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ public:
 
 	LexerIterator	&operator=(const Lexer &lexer) { _tokens = lexer.tokens(); _error = lexer.error(); return *this; }
 	operator bool() { return _idx < _tokens.size(); }
+
 	const token	&operator->() const
 	{
 		if (_idx == size()) return _tokens[size() - 1];

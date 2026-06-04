@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ParserBuilder.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brunofer <brunofer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/31 17:40:15 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/02 16:22:26 by brunofer         ###   ########.fr       */
+/*   Updated: 2026/06/04 00:57:45 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,25 +59,25 @@ public:
 
 	ParserBuilder	&withDefaultBlocks()
 	{
-		_parser.addDirectiveKeyword("http", ParserTokenType::PT_HTTP);
-		_parser.addDirectiveKeyword("events", ParserTokenType::PT_EVENTS);
-		_parser.addDirectiveKeyword("server", ParserTokenType::PT_SERVER);
-		_parser.addDirectiveKeyword("location", ParserTokenType::PT_LOCATION);
-		_parser.addDirectiveKeyword("upstream", ParserTokenType::PT_UPSTREAM);
-		_parser.addDirectiveKeyword("geo", ParserTokenType::PT_GEO);
-		_parser.addDirectiveKeyword("map", ParserTokenType::PT_MAP);
-		_parser.addDirectiveKeyword("stream", ParserTokenType::PT_STREAM);
-		_parser.addDirectiveKeyword("types", ParserTokenType::PT_TYPES);
-		_parser.addDirectiveKeyword("limit_except", ParserTokenType::PT_LIMIT_EXCEPT);
+		_parser.addBlockKeyword("http", ParserTokenType::PT_HTTP);
+		_parser.addBlockKeyword("events", ParserTokenType::PT_EVENTS);
+		_parser.addBlockKeyword("server", ParserTokenType::PT_SERVER);
+		_parser.addBlockKeyword("location", ParserTokenType::PT_LOCATION);
+		_parser.addBlockKeyword("upstream", ParserTokenType::PT_UPSTREAM);
+		_parser.addBlockKeyword("geo", ParserTokenType::PT_GEO);
+		_parser.addBlockKeyword("map", ParserTokenType::PT_MAP);
+		_parser.addBlockKeyword("stream", ParserTokenType::PT_STREAM);
+		_parser.addBlockKeyword("types", ParserTokenType::PT_TYPES);
+		_parser.addBlockKeyword("limit_except", ParserTokenType::PT_LIMIT_EXCEPT);
 		return *this;
 	}
 
 	ParserBuilder	&withDefaultModifiers()
 	{
-		_parser.addDirectiveKeyword("=", ParserTokenType::PT_MOD_EXACT);
-		_parser.addDirectiveKeyword("~", ParserTokenType::PT_MOD_REGEX);
-		_parser.addDirectiveKeyword("~*", ParserTokenType::PT_MOD_REGEX_CI);
-		_parser.addDirectiveKeyword("^~", ParserTokenType::PT_MOD_PREFIX);
+		_parser.addModifier("=", ParserTokenType::PT_MOD_EXACT);
+		_parser.addModifier("~", ParserTokenType::PT_MOD_REGEX);
+		_parser.addModifier("~*", ParserTokenType::PT_MOD_REGEX_CI);
+		_parser.addModifier("^~", ParserTokenType::PT_MOD_PREFIX);
 		return *this;
 	}
 

@@ -1,22 +1,17 @@
-NAME = parser
+NAME = container
 
-INCLUDES = $(shell find ../.. -name ".git" -prune -o -type d -print | sed 's/^/\-I /' | tr "\n" " ")
+INCLUDES =
 
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++11 -g3 $(INCLUDES)
 
-SRC = main.cpp
+SRC = container_test.cpp
 
 OBJ = $(SRC:%.cpp=%.o)
 
 all: $(NAME)
 
-includes:
-	@echo $(INCLUDES)
-
-retry:
-	@clear
-	@$(MAKE) -s re
+retry: re
 	@clear
 	@./$(NAME)
 

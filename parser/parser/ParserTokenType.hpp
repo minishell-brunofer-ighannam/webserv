@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ParserTokenType.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brunofer <brunofer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/31 11:52:51 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/02 17:48:36 by brunofer         ###   ########.fr       */
+/*   Updated: 2026/06/03 21:29:45 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,25 +43,33 @@ enum ParserTokenType
 	PT_LIMIT_EXCEPT,
 
 	// diretivas especiais
+
+	PT_PID,
 	PT_WORKER_PROCESSES,
 	PT_WORKER_CONNECTIONS,
 	PT_LISTEN,
 	PT_SERVER_NAME,
 	PT_EXPIRES,
 	PT_ROOT,
+	PT_LOG_FORMAT,
 	PT_ACCESS_LOG,
+	PT_ERROR_LOG,
 	PT_ERROR_PAGE,
 	PT_TRY_FILES,
 	PT_ADD_HEADER,
 	PT_INDEX,
 	PT_INCLUDE,
 	PT_PROXY_PASS,
+	PT_PROXY_SET_HEADER,
 	PT_FASTCGI_PASS,
+	PT_FASTCGI_PARAM,
 	PT_RETURN,
 	PT_REWRITE,
 	PT_SSL_CERTIFICATE,
 	PT_SSL_CERTIFICATE_KEY,
 	PT_SSL_PROTOCOLS,
+	PT_SSL_CIPHERS,
+	PT_CLIENT_MAX_BODY_SIZE,
 
 	// modificadores de location
 	PT_MOD_EXACT,        // =
@@ -102,25 +110,33 @@ static const char* ParserTokenTypeStr[] =
 	"PT_LIMIT_EXCEPT",
 
 	// diretivas especiais
+
+	"PT_PID",
 	"PT_WORKER_PROCESSES",
 	"PT_WORKER_CONNECTIONS",
 	"PT_LISTEN",
 	"PT_SERVER_NAME",
 	"PT_EXPIRES",
 	"PT_ROOT",
+	"PT_LOG_FORMAT",
 	"PT_ACCESS_LOG",
+	"PT_ERROR_LOG",
 	"PT_ERROR_PAGE",
 	"PT_TRY_FILES",
 	"PT_ADD_HEADER",
 	"PT_INDEX",
 	"PT_INCLUDE",
 	"PT_PROXY_PASS",
+	"PT_PROXY_SET_HEADER",
 	"PT_FASTCGI_PASS",
+	"PT_FASTCGI_PARAM",
 	"PT_RETURN",
 	"PT_REWRITE",
 	"PT_SSL_CERTIFICATE",
 	"PT_SSL_CERTIFICATE_KEY",
 	"PT_SSL_PROTOCOLS",
+	"PT_SSL_CIPHERS",
+	"PT_CLIENT_MAX_BODY_SIZE",
 
 	// modificadores de location
 	"PT_MOD_EXACT",        // =

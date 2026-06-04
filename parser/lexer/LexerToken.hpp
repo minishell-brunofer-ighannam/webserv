@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/31 11:44:53 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/05/31 14:27:50 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/04 03:09:21 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@
 # include "has_type.hpp"
 # include "LexerTokenType.hpp"
 
-class LexerToken: public has_type<LexerTokenType>
+class LexerToken: public segregation::has_type<LexerTokenType>
 {
-	typedef has_type<LexerTokenType>	base;
+	typedef segregation::has_type<LexerTokenType>	base;
 	public:
 		typedef LexerTokenType		type;
 	private:
@@ -48,6 +48,10 @@ class LexerToken: public has_type<LexerTokenType>
 		const std::string	&getFileName() const { return _file_name; }
 		size_t				getLine() const { return _line; }
 		size_t				getLineColumn() const { return _line_col; }
+		std::string			getLineAddress() const
+		{
+			return _file_name + ":" + std::to_string(_line) + ":" + std::to_string(_line_col);
+		}
 		const std::string	&getContent() const { return _content; }
 
 		bool	operator==(LexerTokenType type) const { return this->_type == type; }

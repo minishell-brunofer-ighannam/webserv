@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ParserVisitorPrinter.hpp                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brunofer <brunofer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/31 18:28:35 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/02 15:28:28 by brunofer         ###   ########.fr       */
+/*   Updated: 2026/06/03 19:48:53 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@
 # include <iostream>
 # include <sstream>
 
-# include "ParserVisitor.hpp"
+# include "ParserVisitorBase.hpp"
 # include "ParserComposite.hpp"
 
-class ParserVisitorPrinter: public ParserVisitor
+class ParserVisitorPrinter: public ParserVisitorBase
 {
 private:
 	size_t	_ident;
@@ -51,8 +51,8 @@ public:
 			std::cout << block.values[i].getContent() << " ";
 		std::cout << "\n";
 		++_ident;
-		for (size_t i = 0; i < block._children.size(); i++)
-			block._children[i]->accept(*this);
+		for (size_t i = 0; i < block.children.size(); i++)
+			block.children[i]->accept(*this);
 		--_ident;
 	}
 };

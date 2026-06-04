@@ -1,26 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ParserVisitor.hpp                                  :+:      :+:    :+:   */
+/*   segregation.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brunofer <brunofer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/31 15:42:20 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/02 14:18:24 by brunofer         ###   ########.fr       */
+/*   Created: 2026/05/20 11:14:09 by bruno-valer       #+#    #+#             */
+/*   Updated: 2026/05/24 12:11:43 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSER_VISITOR_HPP
-# define PARSER_VISITOR_HPP
+#ifndef SEGREGATION_HPP
+# define SEGREGATION_HPP
 
-struct Directive;
-struct Block;
-
-struct ParserVisitor
-{
-	virtual ~ParserVisitor() {};
-	virtual void	visit(Directive&) = 0;
-	virtual void	visit(Block&) = 0;
-};
+# include "has_name.hpp"
+# include "has_type.hpp"
+# include "has_id.hpp"
+# include "has_errors.hpp"
 
 #endif
