@@ -151,9 +151,9 @@ class Lexer
 					++_file;
 				++_file;
 			}
-			std::string e_header = _file.name()+":"+std::to_string(quote_start_line)+":"+std::to_string(quote_start_line_col)+" -> ";
+			std::string e_header = _file.name()+":"+utils::to_string(quote_start_line)+":"+utils::to_string(quote_start_line_col)+" -> ";
 			_error = e_header + "quote open '"+_temp_quote+"'.";
-			return token(_file.name(), _file.line(), _file.lineColumn(), "", token_type::ERROR);
+			return token(_file.name(), _file.line(), _file.lineColumn(), "", ERROR);
 		}
 
 		/**
@@ -181,7 +181,7 @@ class Lexer
 			size_t	comment_start_cursor		= _file.cursor();
 			while (*_file && *_file != '\n')
 				++_file;
-			return	token(_file.name(), _file.line(), _file.lineColumn(), _file.substr_back(comment_start_cursor), token_type::COMMENT);
+			return	token(_file.name(), _file.line(), _file.lineColumn(), _file.substr_back(comment_start_cursor), COMMENT);
 		}
 
 		/**
@@ -195,11 +195,11 @@ class Lexer
 		token	_readWord()
 		{
 			if (!_file)
-				return token(_file.name(), _file.line(), _file.lineColumn(), "", token_type::END);
+				return token(_file.name(), _file.line(), _file.lineColumn(), "", END);
 			size_t	word_start_cursor		= _file.cursor();
 			while (*_file && !std::isspace(*_file) && !_isDelimitter() && !_isQuote())
 				++_file;
-			return token(_file.name(), _file.line(), _file.lineColumn(), _file.substr(word_start_cursor, _file.cursor() - word_start_cursor), token_type::WORD);
+			return token(_file.name(), _file.line(), _file.lineColumn(), _file.substr(word_start_cursor, _file.cursor() - word_start_cursor), WORD);
 		}
 
 	public:

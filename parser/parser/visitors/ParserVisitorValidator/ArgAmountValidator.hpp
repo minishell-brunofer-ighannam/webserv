@@ -21,6 +21,7 @@
 # include "schema.hpp"
 # include "ParserTokenType.hpp"
 # include "ParserComposite.hpp"
+# include "utils.hpp"
 
 /**
  * @brief Validador da quantidade de argumentos de nós da AST.
@@ -40,8 +41,8 @@ private:
 	 * Associa um tipo de token ao schema responsável por validar
 	 * sua quantidade de argumentos.
 	 */
-	typedef std::map<ParserTokenType, schema::detail::integer_base<unsigned> > Validations;
-	std::map<ParserTokenType, schema::detail::integer_base<unsigned> >	_validations; // @brief Regras de validação cadastradas.
+	typedef std::map<ParserTokenType, schema_unsigned_int > Validations;
+	std::map<ParserTokenType, schema_unsigned_int >	_validations; // @brief Regras de validação cadastradas.
 	std::vector<std::string>	_errors; // @brief Lista de erros encontrados durante a validação.
 public:
 	// @brief Constrói um validador vazio.
@@ -69,7 +70,7 @@ public:
 			_errors.push_back(msg);
 			return;
 		}
-		schema::result<unsigned int> resp = it->second.parse(std::to_string(node.values.size()));
+		schema_result_unsigned_int resp = it->second.parse(utils::to_string(node.values.size()));
 		if (!resp)
 			for (size_t i = 0; i < resp.errors.size(); i++)
 				_errors.push_back(resp.errors[i].format());
@@ -81,9 +82,9 @@ public:
 	 * @param type Tipo do nó.
 	 * @param validation Schema responsável pela validação.
 	 */
-	void	addValidation(ParserTokenType type, schema::detail::integer_base<unsigned> validation)
+	void	addValidation(ParserTokenType type, schema::detail::schema_int<unsigned> validation)
 	{
-		_validations[type] = validation;
+		this->_validations[type] = validation;
 	}
 
 	/**
@@ -172,47 +173,47 @@ public:
 	ArgAmountValidatorBuilder	&withDefaultValidations()
 	{
 		static unsigned int	unlimited = std::numeric_limits<unsigned>::max();
-		return add(PT_HTTP, schema::uint32().between(0, 0).name("http args amount"))
-		.add(PT_EVENTS, schema::uint32().between(0, 0).name("events args amount"))
-		.add(PT_SERVER, schema::uint32().between(0, 0).name("server args amount"))
-		.add(PT_UPSTREAM, schema::uint32().between(1, 1).name("upstream args amount"))
-		.add(PT_LOCATION, schema::uint32().between(1, 2).name("location args amount"))
-		.add(PT_WORKER_PROCESSES, schema::uint32().between(1, 1).name("worket_process args amount"))
-		.add(PT_WORKER_CONNECTIONS, schema::uint32().between(1, 1).name("worker_connections args amount"))
-		.add(PT_ERROR_LOG, schema::uint32().between(1, 2).name("error_log args amount"))
-		.add(PT_PID, schema::uint32().between(1, 1).name("pid args amount"))
-		.add(PT_LISTEN, schema::uint32().between(1, unlimited).name("listen args amount"))
-		.add(PT_SERVER_NAME, schema::uint32().between(1, unlimited).name("server_name args amount"))
-		.add(PT_ROOT, schema::uint32().between(1, 1).name("root args amount"))
-		.add(PT_INDEX, schema::uint32().between(1, unlimited).name("index args amount"))
-		.add(PT_TRY_FILES, schema::uint32().between(2, unlimited).name("try_files args amount"))
-		.add(PT_PROXY_PASS, schema::uint32().between(1, 1).name("index args amount"))
-		.add(PT_PROXY_SET_HEADER, schema::uint32().between(2, 2).name("proxy_set_header args amount"))
-		.add(PT_FASTCGI_PASS, schema::uint32().between(1, 1).name("fast_cgi_pass args amount"))
-		.add(PT_FASTCGI_PARAM, schema::uint32().between(2, 2).name("fast_cgi_param args amount"))
-		.add(PT_ERROR_PAGE, schema::uint32().between(2, unlimited).name("error_page args amount"))
-		.add(PT_ADD_HEADER, schema::uint32().between(2, 3).name("add_header args amount"))
-		.add(PT_EXPIRES, schema::uint32().between(1, 1).name("expires args amount"))
-		.add(PT_SSL_CERTIFICATE, schema::uint32().between(1, 1).name("ssl_certificate args amount"))
-		.add(PT_SSL_CERTIFICATE_KEY, schema::uint32().between(1, 1).name("ssl_certificate_key args amount"))
-		.add(PT_SSL_PROTOCOLS, schema::uint32().between(1, unlimited).name("ssl_protocols args amount"))
-		.add(PT_SSL_CIPHERS, schema::uint32().between(1, 1).name("ssl_ciphers args amount"))
-		.add(PT_CLIENT_MAX_BODY_SIZE, schema::uint32().between(1, 1).name("client_max_body_size args amount"))
-		.add(PT_LOG_FORMAT, schema::uint32().between(2, unlimited).name("log_format args amount"))
-		.add(PT_ACCESS_LOG, schema::uint32().between(1, 2).name("access_log args amount"))
-		.add(PT_RETURN, schema::uint32().between(1, 2).name("return args amount"))
+		return add(PT_HTTP, schema::unsigned_integer().between(0, 0).name("http args amount"))
+		.add(PT_EVENTS, schema::unsigned_integer().between(0, 0).name("events args amount"))
+		.add(PT_SERVER, schema::unsigned_integer().between(0, 0).name("server args amount"))
+		.add(PT_UPSTREAM, schema::unsigned_integer().between(1, 1).name("upstream args amount"))
+		.add(PT_LOCATION, schema::unsigned_integer().between(1, 2).name("location args amount"))
+		.add(PT_WORKER_PROCESSES, schema::unsigned_integer().between(1, 1).name("worket_process args amount"))
+		.add(PT_WORKER_CONNECTIONS, schema::unsigned_integer().between(1, 1).name("worker_connections args amount"))
+		.add(PT_ERROR_LOG, schema::unsigned_integer().between(1, 2).name("error_log args amount"))
+		.add(PT_PID, schema::unsigned_integer().between(1, 1).name("pid args amount"))
+		.add(PT_LISTEN, schema::unsigned_integer().between(1, unlimited).name("listen args amount"))
+		.add(PT_SERVER_NAME, schema::unsigned_integer().between(1, unlimited).name("server_name args amount"))
+		.add(PT_ROOT, schema::unsigned_integer().between(1, 1).name("root args amount"))
+		.add(PT_INDEX, schema::unsigned_integer().between(1, unlimited).name("index args amount"))
+		.add(PT_TRY_FILES, schema::unsigned_integer().between(2, unlimited).name("try_files args amount"))
+		.add(PT_PROXY_PASS, schema::unsigned_integer().between(1, 1).name("index args amount"))
+		.add(PT_PROXY_SET_HEADER, schema::unsigned_integer().between(2, 2).name("proxy_set_header args amount"))
+		.add(PT_FASTCGI_PASS, schema::unsigned_integer().between(1, 1).name("fast_cgi_pass args amount"))
+		.add(PT_FASTCGI_PARAM, schema::unsigned_integer().between(2, 2).name("fast_cgi_param args amount"))
+		.add(PT_ERROR_PAGE, schema::unsigned_integer().between(2, unlimited).name("error_page args amount"))
+		.add(PT_ADD_HEADER, schema::unsigned_integer().between(2, 3).name("add_header args amount"))
+		.add(PT_EXPIRES, schema::unsigned_integer().between(1, 1).name("expires args amount"))
+		.add(PT_SSL_CERTIFICATE, schema::unsigned_integer().between(1, 1).name("ssl_certificate args amount"))
+		.add(PT_SSL_CERTIFICATE_KEY, schema::unsigned_integer().between(1, 1).name("ssl_certificate_key args amount"))
+		.add(PT_SSL_PROTOCOLS, schema::unsigned_integer().between(1, unlimited).name("ssl_protocols args amount"))
+		.add(PT_SSL_CIPHERS, schema::unsigned_integer().between(1, 1).name("ssl_ciphers args amount"))
+		.add(PT_CLIENT_MAX_BODY_SIZE, schema::unsigned_integer().between(1, 1).name("client_max_body_size args amount"))
+		.add(PT_LOG_FORMAT, schema::unsigned_integer().between(2, unlimited).name("log_format args amount"))
+		.add(PT_ACCESS_LOG, schema::unsigned_integer().between(1, 2).name("access_log args amount"))
+		.add(PT_RETURN, schema::unsigned_integer().between(1, 2).name("return args amount"))
 
-		.add(PT_USE, schema::uint32().between(1, 1).name("use args amount"))
-		.add(MULTI_ACCEPT, schema::uint32().between(1, 1).name("multi_accept args amount"))
-		.add(PT_INCLUDE, schema::uint32().between(1, unlimited).name("include args amount"))
-		.add(DEFAULT_TYPE, schema::uint32().between(1, 1).name("default_type args amount"))
-		.add(SENDFILE, schema::uint32().between(1, 1).name("sendfile args amount"))
-		.add(KEEPALIVE_TIMEOUT, schema::uint32().between(1, 2).name("keepalive_timeout args amount"))
-		.add(PT_SERVER_DIRECTIVE, schema::uint32().between(1, unlimited).name("upstream server args amount"))
-		.add(PT_AUTOINDEX, schema::uint32().between(1, 1).name("autoindex args amount"))
-		.add(PT_LOG_NOT_FOUND, schema::uint32().between(1, 1).name("log_not_found args amount"))
-		.add(PT_PROXY_CACHE_BYPASS, schema::uint32().between(1, unlimited).name("proxy_cache_bypass args amount"))
-		.add(PT_FASTCGI_INDEX, schema::uint32().between(1, 1).name("fastcgi_index args amount"));
+		.add(PT_USE, schema::unsigned_integer().between(1, 1).name("use args amount"))
+		.add(MULTI_ACCEPT, schema::unsigned_integer().between(1, 1).name("multi_accept args amount"))
+		.add(PT_INCLUDE, schema::unsigned_integer().between(1, unlimited).name("include args amount"))
+		.add(DEFAULT_TYPE, schema::unsigned_integer().between(1, 1).name("default_type args amount"))
+		.add(SENDFILE, schema::unsigned_integer().between(1, 1).name("sendfile args amount"))
+		.add(KEEPALIVE_TIMEOUT, schema::unsigned_integer().between(1, 2).name("keepalive_timeout args amount"))
+		.add(PT_SERVER_DIRECTIVE, schema::unsigned_integer().between(1, unlimited).name("upstream server args amount"))
+		.add(PT_AUTOINDEX, schema::unsigned_integer().between(1, 1).name("autoindex args amount"))
+		.add(PT_LOG_NOT_FOUND, schema::unsigned_integer().between(1, 1).name("log_not_found args amount"))
+		.add(PT_PROXY_CACHE_BYPASS, schema::unsigned_integer().between(1, unlimited).name("proxy_cache_bypass args amount"))
+		.add(PT_FASTCGI_INDEX, schema::unsigned_integer().between(1, 1).name("fastcgi_index args amount"));
 	}
 
 	/**
@@ -223,7 +224,7 @@ public:
 	 *
 	 * @return Referência para o builder.
 	 */
-	ArgAmountValidatorBuilder	&add(ParserTokenType type, schema::detail::integer_base<unsigned> validation)
+	ArgAmountValidatorBuilder	&add(ParserTokenType type, schema::detail::schema_int<unsigned> validation)
 	{
 		_validator.addValidation(type, validation);
 		return *this;

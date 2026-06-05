@@ -47,7 +47,7 @@ private:
 	// @brief Ignora tokens de comentário consecutivos.
 	void	_skipComments()
 	{
-		while (_it && *_it == LexerTokenType::COMMENT)
+		while (_it && *_it == COMMENT)
 			++_it;
 	}
 
@@ -65,8 +65,8 @@ private:
 	 */
 	ParserToken	_convertToken(const LexerToken &token, bool after_location = false)
 	{
-		if (token == LexerTokenType::STRING_SINGLE) return ParserToken::fromLexerToken(token, ParserTokenType::PT_STRING_SINGLE);
-		if (token == LexerTokenType::STRING_DOUBLE) return ParserToken::fromLexerToken(token, ParserTokenType::PT_STRING_DOUBLE);
+		if (token == STRING_SINGLE) return ParserToken::fromLexerToken(token, PT_STRING_SINGLE);
+		if (token == STRING_DOUBLE) return ParserToken::fromLexerToken(token, PT_STRING_DOUBLE);
 
 		if (after_location)
 		{
@@ -83,9 +83,9 @@ private:
 		if (block_it != _block_keywords.end())
 			return ParserToken::fromLexerToken(token, block_it->second);
 
-		if (token == LexerTokenType::END) return ParserToken::fromLexerToken(token, ParserTokenType::PT_END);
+		if (token == END) return ParserToken::fromLexerToken(token, PT_END);
 
-		return ParserToken::fromLexerToken(token, ParserTokenType::PT_WORD);
+		return ParserToken::fromLexerToken(token, PT_WORD);
 	}
 
 	/**
@@ -106,32 +106,32 @@ private:
 			_errors.push_back((*_it).getLineAddress() + " Invalid node name!");
 		++_it;
 
-		bool	is_after_location = name == ParserTokenType::PT_LOCATION;
+		bool	is_after_location = name == PT_LOCATION;
 		std::vector<ParserToken>	values;
 		while (_it
-			&& *_it != LexerTokenType::COMMENT
-			&& *_it != LexerTokenType::LBRACE
-			&& *_it != LexerTokenType::SEMICOLON)
+			&& *_it != COMMENT
+			&& *_it != LBRACE
+			&& *_it != SEMICOLON)
 		{
-			if (*_it == LexerTokenType::RBRACE)
+			if (*_it == RBRACE)
 				_errors.push_back((*_it).getLineAddress() + " Closing an unopened scope!");
 			values.push_back(_convertToken(*_it, is_after_location));
 			is_after_location = false;
 			++_it;
 		}
-		if (*_it == LexerTokenType::LBRACE)
+		if (*_it == LBRACE)
 		{
 			LexerIterator::token	lbrace = *_it;
 			++_it; // consome { LBRACE
 			Block	*block = new Block(name, values);
-			while (_it && *_it != LexerTokenType::RBRACE)
+			while (_it && *_it != RBRACE)
 			{
 				_skipComments();
-				if (!_it || *_it == LexerTokenType::LBRACE)
+				if (!_it || *_it == LBRACE)
 					break;
 				block->children.push_back(parseStatement());
 			}
-			if (*_it != LexerTokenType::RBRACE)
+			if (*_it != RBRACE)
 				_errors.push_back(lbrace.getLineAddress() + " Unclosed scope");
 			++_it; // consome } RBRACE
 			return block;
@@ -205,7 +205,7 @@ public:
 		ParserAst	ast;
 		if (!_it.error().empty())
 			ast.addError(_it.error());
-		Block	*root = new Block(ParserToken("root", 0, 0, "root", ParserTokenType::PT_MAIN));
+		Block	*root = new Block(ParserToken("root", 0, 0, "root", PT_MAIN));
 		while (_it)
 		{
 			_skipComments();

@@ -14,6 +14,7 @@
 # define LEXER_TOKEN_HPP
 
 # include <iostream>
+# include "utils.hpp"
 
 # include "has_type.hpp"
 # include "LexerTokenType.hpp"
@@ -94,7 +95,7 @@ public:
 	 */
 	std::string			getLineAddress() const
 	{
-		return _file_name + ":" + std::to_string(_line) + ":" + std::to_string(_line_col);
+		return _file_name + ":" + utils::to_string(_line) + ":" + utils::to_string(_line_col);
 	}
 
 	/**

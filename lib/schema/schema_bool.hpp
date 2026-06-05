@@ -33,6 +33,15 @@ namespace schema
                 true_indicators.push_back("true");
                 false_indicators.push_back("false");
             };
+            schema_bool(const schema_bool& other) : base(other), true_indicators(other.true_indicators), false_indicators(other.false_indicators) {}
+            schema_bool& operator=(const schema_bool& other) {
+                if (this != &other) {
+                    base::operator=(other);
+                    true_indicators = other.true_indicators;
+                    false_indicators = other.false_indicators;
+                }
+                return *this;
+            }
             ~schema_bool() {};
             schema_bool& truthy(const std::string& msg = "")
             {

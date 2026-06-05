@@ -16,7 +16,7 @@
 # include <string>
 
 # include "schema_base.hpp"
-#include "utils.hpp"
+# include "utils.hpp"
 
 
 namespace schema
@@ -30,6 +30,13 @@ namespace schema
             
         public:
             schema_string(): base() {};
+            schema_string(const schema_string& other) : base(other) {}
+            schema_string& operator=(const schema_string& other) {
+                if (this != &other) {
+                    base::operator=(other);
+                }
+                return *this;
+            }
             ~schema_string() {};
             
             schema_string   &minLength(const size_t& len, const std::string& msg = "")

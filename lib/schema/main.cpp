@@ -24,6 +24,9 @@ int main()
     
     schema_result_int res_int = schema::integer().min(10).name("NAME INT").parse("2");
     std::cout << res_int.format();
+	
+	schema_result_int res_int2 = schema::integer().between(10, 20).name("NAME INT").parse("2");
+    std::cout << res_int2.format();
 
     schema_double double_test = schema::dbl().name("DOUBLE").min(2.35);
     schema_result_double res_double = double_test.parse("1.8");

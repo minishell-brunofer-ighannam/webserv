@@ -45,9 +45,9 @@ class ScopeValidator
 		 *
 		 * Mapeia um token para a lista de escopos onde ele é permitido.
 		 */
-		typedef std::map<ParserTokenType, std::vector<ParserTokenType>> Validations;
-		std::map<ParserTokenType, std::vector<ParserTokenType>>	_directive_scope; // @brief Regras de escopo para diretivas.
-		std::map<ParserTokenType, std::vector<ParserTokenType>>	_block_scope; // @brief Regras de escopo para blocos.
+		typedef std::map<ParserTokenType, std::vector<ParserTokenType> > Validations;
+		std::map<ParserTokenType, std::vector<ParserTokenType> >	_directive_scope; // @brief Regras de escopo para diretivas.
+		std::map<ParserTokenType, std::vector<ParserTokenType> >	_block_scope; // @brief Regras de escopo para blocos.
 		std::vector<std::string>	_errors; // @brief Lista de erros encontrados durante a validação.
 
 		/**
@@ -187,12 +187,11 @@ class ScopeValidatorBuilder
 		 */
 		ParserTokenType	_last_scope_updated;
 		bool			_last_scope_updated_is_block; // @brief Indica se o último token configurado é um bloco.
-		ParserTokenType	_tracking_scope; // @brief Escopo atualmente acompanhado pelo builder.
 
 	public:
 		// @brief Constrói um builder vazio.
 		ScopeValidatorBuilder()
-			: _scope_validator(), _last_scope_updated(), _last_scope_updated_is_block(false), _tracking_scope() {};
+			: _scope_validator(), _last_scope_updated(), _last_scope_updated_is_block(false){};
 		~ScopeValidatorBuilder() {};
 
 		/**

@@ -30,6 +30,13 @@ namespace schema
                 const TDerived& derived() const { return static_cast<const TDerived&>(*this); };
             public:
                 schema_number() {};
+                schema_number(const schema_number& other) : base(other) {}
+                schema_number& operator=(const schema_number& other) {
+                    if (this != &other) {
+                        base::operator=(other);
+                    }
+                    return *this;
+                }
                 ~schema_number() {};
                 TDerived& min(const T& value, const std::string& msg = "")
                 {
@@ -39,6 +46,10 @@ namespace schema
                 {
                     return derived()._max(value, msg);
                 }
+				TDerived& between(const T& value_min, const T& value_max, const std::string& msg = "")
+				{
+					return derived()._min(value_min, msg)._max(value_max, msg);
+				}
                 result<T> parse(std::string entry)
                 {
                     std::stringstream ss;
@@ -181,6 +192,14 @@ namespace schema
                 }
             public:
                 schema_double() : _eps(1e-9) {};
+                schema_double(const schema_double& other) : base(other), _eps(other._eps) {}
+                schema_double& operator=(const schema_double& other) {
+                    if (this != &other) {
+                        base::operator=(other);
+                        _eps = other._eps;
+                    }
+                    return *this;
+                }
                 
                 schema_double& eps(double eps_) { _eps = eps_; return *this; };
         };

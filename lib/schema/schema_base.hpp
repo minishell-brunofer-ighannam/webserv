@@ -130,6 +130,18 @@ namespace schema
 							this->validators.push_back(other.validators[i]->clone());
 					}
 				}
+				schema_base& operator=(const schema_base& other)
+				{
+					if (this != &other)
+					{
+						for (size_t i = 0; i < validators.size(); i++)
+							delete validators[i];
+						validators.clear();
+						for (size_t i = 0; i < other.validators.size(); i++)
+							validators.push_back(other.validators[i]->clone());
+					}
+					return *this;
+				}
 				virtual ~schema_base()
 				{
 					for (size_t i = 0; i < validators.size(); i++)

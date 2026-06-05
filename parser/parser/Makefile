@@ -3,7 +3,7 @@ NAME = parser
 INCLUDES = $(shell find ../.. -name ".git" -prune -o -type d -print | sed 's/^/\-I /' | tr "\n" " ")
 
 CC = c++
-CFLAGS = -Wall -Wextra -Werror -std=c++11 -g3 $(INCLUDES)
+CFLAGS = -Wall -Wextra -Werror -std=c++98 -g3 $(INCLUDES)
 
 SRC = main.cpp
 

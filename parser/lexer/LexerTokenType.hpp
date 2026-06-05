@@ -28,7 +28,7 @@ enum LexerTokenType
 	END				= '\0',
 };
 
-static const char* ParserTokenTypeStr[] =
+static const char* LexerTokenTypeStr[] =
 {
 	"COMMENT",
 	"LBRACE",
@@ -43,7 +43,7 @@ static const char* ParserTokenTypeStr[] =
 
 std::ostream	&operator<<(std::ostream &os, LexerTokenType type)
 {
-	os << ParserTokenTypeStr[type];
+	os << LexerTokenTypeStr[type];
 	return os;
 }
 
