@@ -79,6 +79,6 @@ int main(void){
 		}
 	}
     close(listen_fd);
-	
+	std::cout << "teste";
 	return 0;
 }
