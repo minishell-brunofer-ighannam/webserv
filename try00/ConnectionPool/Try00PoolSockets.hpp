@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   PoolSockets.hpp                                    :+:      :+:    :+:   */
+/*   Try00PoolSockets.hpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/07 23:06:06 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/07 23:43:13 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/09 11:19:01 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,19 @@
 # include <vector>
 # include <algorithm>
 
-# include "Socket.hpp"
+# include "Try00Socket.hpp"
 
-class PoolSockets
+class Try00PoolSockets
 {
 	protected:
-		std::vector<Socket*>	_sockets;
+		std::vector<Try00Socket*>	_sockets;
 		std::vector<pollfd>		_pollfds;
 
 	public:
-		typedef std::vector<Socket*>::iterator	iterator;
+		typedef std::vector<Try00Socket*>::iterator	iterator;
 
-		PoolSockets() {};
-		~PoolSockets() {};
+		Try00PoolSockets() {};
+		~Try00PoolSockets() {};
 
 		size_t	size() const { return _sockets.size(); }
 
@@ -38,7 +38,7 @@ class PoolSockets
 		iterator	begin() { return _sockets.begin(); }
 		iterator	end() { return _sockets.end(); }
 
-		void	add(Socket *socket)
+		void	add(Try00Socket *socket)
 		{
 			if (_sockets.empty())
 			{
@@ -46,7 +46,7 @@ class PoolSockets
 				_pollfds.push_back(*socket);
 				return;
 			}
-			std::vector<Socket*>::iterator	it = std::lower_bound(_sockets.begin(), _sockets.end(), socket);
+			std::vector<Try00Socket*>::iterator	it = std::lower_bound(_sockets.begin(), _sockets.end(), socket);
 			if (*it == socket)
 			{
 				std::cerr << "Unable to add socket '" << socket->fd() << "'. Is already in the pool.\n";
@@ -57,9 +57,9 @@ class PoolSockets
 			_pollfds.insert(_pollfds.begin() + idx, *socket);
 		}
 
-		void	remove(Socket *socket)
+		void	remove(Try00Socket *socket)
 		{
-			std::vector<Socket*>::iterator	it = std::lower_bound(_sockets.begin(), _sockets.end(), socket);
+			std::vector<Try00Socket*>::iterator	it = std::lower_bound(_sockets.begin(), _sockets.end(), socket);
 			if (it == _sockets.end()) return ;
 			size_t	idx = it - _sockets.begin();
 			_sockets.erase(it);

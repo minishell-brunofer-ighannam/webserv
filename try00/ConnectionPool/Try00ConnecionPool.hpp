@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ConnecionPool.hpp                                  :+:      :+:    :+:   */
+/*   Try00ConnecionPool.hpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/07 20:54:50 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/08 01:30:27 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/09 11:18:51 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,48 +17,48 @@
 # include <algorithm>
 
 # include "singleton.hpp"
-# include "Socket.hpp"
-# include "PoolSockets.hpp"
-# include "ListenSocket.hpp"
-# include "ConnectionSocket.hpp"
+# include "Try00Socket.hpp"
+# include "Try00PoolSockets.hpp"
+# include "Try00ListenSocket.hpp"
+# include "Try00ConnectionSocket.hpp"
 
-class ConnecionPool: public patterns::singleton<ConnecionPool>
+class Try00ConnecionPool: public patterns::singleton<Try00ConnecionPool>
 {
-	friend class patterns::singleton<ConnecionPool>;
+	friend class patterns::singleton<Try00ConnecionPool>;
 	private:
-		ConnecionPool() {};
-		~ConnecionPool() {};
-		ConnecionPool(const ConnecionPool&);
-		ConnecionPool	&operator=(const ConnecionPool&);
+		Try00ConnecionPool() {};
+		~Try00ConnecionPool() {};
+		Try00ConnecionPool(const Try00ConnecionPool&);
+		Try00ConnecionPool	&operator=(const Try00ConnecionPool&);
 
-		PoolSockets	_listenners;
-		PoolSockets	_connections;
+		Try00PoolSockets	_listenners;
+		Try00PoolSockets	_connections;
 
 	public:
 
-	void	addListenner(ListenSocket	*listenner)
+	void	addListenner(Try00ListenSocket	*listenner)
 	{
 		_listenners.add(listenner);
 	}
 
-	void	connect(ConnectionSocket	*connection)
+	void	connect(Try00ConnectionSocket	*connection)
 	{
 		_connections.add(connection);
 	}
 
-	void	disconnect(ConnectionSocket	*connection)
+	void	disconnect(Try00ConnectionSocket	*connection)
 	{
 		_connections.remove(connection);
 	}
 
 	struct functor_for_each_listenner
 	{
-		virtual void	operator() (ListenSocket &) = 0;
+		virtual void	operator() (Try00ListenSocket &) = 0;
 	};
 
 	struct functor_for_each_connection
 	{
-		virtual void	operator() (ConnectionSocket &) = 0;
+		virtual void	operator() (Try00ConnectionSocket &) = 0;
 	};
 
 
@@ -69,18 +69,18 @@ class ConnecionPool: public patterns::singleton<ConnecionPool>
 
 	void	forEachListenner(functor_for_each_listenner &callback)
 	{
-		for (PoolSockets::iterator	it = _listenners.begin(); it != _listenners.end(); it++)
+		for (Try00PoolSockets::iterator	it = _listenners.begin(); it != _listenners.end(); it++)
 		{
-			ListenSocket	*socket = static_cast<ListenSocket *>(*it);
+			Try00ListenSocket	*socket = static_cast<Try00ListenSocket *>(*it);
 			callback(*socket);
 		}
 	}
 
 	void	forEachListenner(functor_for_each_connection &callback)
 	{
-		for (PoolSockets::iterator	it = _connections.begin(); it != _connections.end(); it++)
+		for (Try00PoolSockets::iterator	it = _connections.begin(); it != _connections.end(); it++)
 		{
-			ConnectionSocket	*socket = static_cast<ConnectionSocket *>(*it);
+			Try00ConnectionSocket	*socket = static_cast<Try00ConnectionSocket *>(*it);
 			callback(*socket);
 		}
 	}

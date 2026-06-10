@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/07 19:19:58 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/08 01:12:27 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/09 23:35:29 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,10 @@ class ConfigServerListen
 		/// Quando true, address contém o caminho do socket
 		/// e port é ignorado. Afeta a chamada socket().
 		bool _is_unix = false;
+
+		bool _is_ipv6 = false;
+
+		bool _is_ipv4 = false;
 
 		// ----------------------------------------------------------------
 		// Flags — configuradas antes de bind() salvo indicação contrária
@@ -148,6 +152,10 @@ class ConfigServerListen
 
 		/// Retorna true se for um unix domain socket (AF_UNIX).
 		bool is_unix() const { return _is_unix; }
+
+		bool is_ipv6() const { return _is_ipv6; }
+
+		bool is_ipv4() const { return _is_ipv4; }
 
 		void setIs_unix(bool value) { _is_unix = value; }
 

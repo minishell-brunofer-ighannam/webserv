@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ListenSocket.hpp                                   :+:      :+:    :+:   */
+/*   Try00ListenSocket.hpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/07 19:38:44 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/08 00:49:10 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/09 11:19:01 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@
 
 # include "utils.hpp"
 # include "ConfigServerListen.hpp"
-# include "Socket.hpp"
+# include "Try00Socket.hpp"
 
-class ListenSocket: public Socket, public ConfigServerListen
+class Try00ListenSocket: public Try00Socket, public ConfigServerListen
 {
 	private:
 
@@ -70,12 +70,12 @@ class ListenSocket: public Socket, public ConfigServerListen
 	}
 
 	public:
-		ListenSocket(ConfigServerListen &config_liten): Socket(SocketType::LISTENNER), ConfigServerListen(config_liten)
+		Try00ListenSocket(ConfigServerListen &config_liten): Try00Socket(Try00SocketType::LISTENNER), ConfigServerListen(config_liten)
 		{
 			if (!_initPollFd()) return;
 			_initAddr();
 		};
-		~ListenSocket() {};
+		~Try00ListenSocket() {};
 };
 
 #endif

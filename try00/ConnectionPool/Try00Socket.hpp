@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Socket.hpp                                         :+:      :+:    :+:   */
+/*   Try00Socket.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/07 20:57:41 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/08 00:37:22 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/09 11:19:01 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 # include "segregation.hpp"
 
-struct SocketType
+struct Try00SocketType
 {
 	enum type
 	{
@@ -30,27 +30,27 @@ struct SocketType
 };
 
 
-class Socket: public segregation::has_type<SocketType::type>
+class Try00Socket: public segregation::has_type<Try00SocketType::type>
 {
 	public:
-		typedef SocketType::type	type;
+		typedef Try00SocketType::type	type;
 	protected:
 		pollfd						_fd;
 		sockaddr_in					_addr;
 		std::vector<std::string>	_errors;
 
 	public:
-		Socket(type _type): segregation::has_type<type>(_type), _fd(), _addr(), _errors()
+		Try00Socket(type _type): segregation::has_type<type>(_type), _fd(), _addr(), _errors()
 		{
 			std::memset(&_addr, 0, sizeof(_addr));
 		};
-		~Socket() { if (_fd.fd > 2) close(_fd.fd); };
+		~Try00Socket() { if (_fd.fd > 2) close(_fd.fd); };
 
 		operator int() const { return _fd.fd; }
 		operator struct pollfd&() { return _fd; }
 		operator struct pollfd*() { return &_fd; }
 
-		Socket	&operator=(const pollfd &poll_fds)
+		Try00Socket	&operator=(const pollfd &poll_fds)
 		{
 			_fd.fd = poll_fds.fd;
 			_fd.events = poll_fds.events;
@@ -58,7 +58,7 @@ class Socket: public segregation::has_type<SocketType::type>
 			return *this;
 		}
 
-		Socket	&operator=(const Socket &other)
+		Try00Socket	&operator=(const Try00Socket &other)
 		{
 			*this = other._fd;
 			_errors = other._errors;

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ConnectionSocket.hpp                               :+:      :+:    :+:   */
+/*   Try00ConnectionSocket.hpp                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/07 23:51:04 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/08 00:36:31 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/09 11:19:01 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,22 @@
 
 # include <netinet/in.h>
 
-# include "Socket.hpp"
+# include "Try00Socket.hpp"
 
-class ConnectionSocket: public Socket
+class Try00ConnectionSocket: public Try00Socket
 {
 	private:
 		socklen_t	_client_len;
 		int			_listenner_fd;
 
 	public:
-		ConnectionSocket(int listenner_fd)
-			: Socket(SocketType::CONNECTION), _client_len(sizeof(struct sockaddr_in)), _listenner_fd(listenner_fd)
+		Try00ConnectionSocket(int listenner_fd)
+			: Try00Socket(Try00SocketType::CONNECTION), _client_len(sizeof(struct sockaddr_in)), _listenner_fd(listenner_fd)
 			{
 				_fd.fd = accept(_listenner_fd, (sockaddr *)&_addr, &_client_len);
 				_errors.push_back("Connection failed.");
 			};
-		~ConnectionSocket() {};
+		~Try00ConnectionSocket() {};
 
 		socklen_t			len() const { _client_len; }
 		int					listennerFd() const { _listenner_fd; }

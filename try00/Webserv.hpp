@@ -6,14 +6,14 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 00:53:35 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/08 01:35:53 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/09 11:18:46 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef WEBSERV_HPP
 # define WEBSERV_HPP
 
-# include "ConnecionPool.hpp"
+# include "Try00ConnecionPool.hpp"
 
 ConfigServerListen	createTestListenner()
 {
@@ -57,8 +57,8 @@ class Webserv
 		// isso vai vir pronto do parser
 		ConfigServerListen	listenner_config = createTestListenner();
 
-		ConnecionPool		&conn_pool = ConnecionPool::getInstance();
-		conn_pool.addListenner(new ListenSocket(listenner_config));
+		Try00ConnecionPool		&conn_pool = Try00ConnecionPool::getInstance();
+		conn_pool.addListenner(new Try00ListenSocket(listenner_config));
 		while (true)
 		{
 			int ret = poll(conn_pool.listennersData(), conn_pool.listennersSize(), -1);
@@ -74,9 +74,9 @@ class Webserv
 				break;
 			}
 			// talvez isso nao e uma boa ideia, da pra criar um metoo que ja cria as conexoes em vez de usar o forEach
-			struct for_each_listenner: public ConnecionPool::functor_for_each_listenner
+			struct for_each_listenner: public Try00ConnecionPool::functor_for_each_listenner
 			{
-				void	operator() (ListenSocket &socket)
+				void	operator() (Try00ListenSocket &socket)
 				{
 
 				}
