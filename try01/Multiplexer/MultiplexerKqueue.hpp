@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 22:00:25 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/09 22:36:38 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/11 13:46:15 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 
 */
 
-# ifdef __APPLE__ && __MACH__
+# if defined(__APPLE__) && defined(__MACH__)
 
 # include <sys/types.h>
 # include <sys/event.h>

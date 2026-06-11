@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 16:58:06 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/09 22:25:48 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/11 13:46:39 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # ifdef __linux__
 #  define CURRENT_SO "linux"
-# elif defined(__APPLE__ && __MACH__)
+# elif defined(__APPLE__) && defined(__MACH__)
 #  define CURRENT_SO "mac"
 # elif defined(_WIN32)
 #  define CURRENT_SO "windows"

@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/02 15:00:29 by ighannam          #+#    #+#             */
-/*   Updated: 2026/06/07 21:40:30 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/11 16:25:13 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,14 @@
 namespace utils
 {
 	template <typename T>
-	std::string to_string(T entry)
+	::std::string to_string(T entry)
 	{
-		std::stringstream ss;
-		ss << std::boolalpha << entry;
+		::std::stringstream ss;
+		ss << ::std::boolalpha << entry;
 		return ss.str();
 	}
 
-	std::string to_string(bool entry)
+	inline ::std::string to_string(bool entry)
 	{
 		return entry ? "true" : "false";
 	}
@@ -44,13 +44,13 @@ namespace utils
         return abs(value_one - value_two) <= eps;
     }
 
-    bool fequal(float value_one, float value_two, double eps = 1e-4)
+    inline bool fequal(float value_one, float value_two, double eps = 1e-4)
     {
         return fequal<float>(value_one, value_two, eps);
     }
 
     template <typename T>
-    bool oneOf(const std::vector<T>& options, const T& value)
+    bool oneOf(const ::std::vector<T>& options, const T& value)
     {
         for (size_t i = 0; i < options.size(); i++)
         {
@@ -61,6 +61,18 @@ namespace utils
     }
 
 	inline double	lerp(double n1, double n2, double factor) { return n1 + ((n2 - n1) * factor); }
+
+	inline ::std::vector<double>	lerp(::std::vector<double> vec1, ::std::vector<double> vec2, double factor)
+	{
+		::std::vector<double>	resp;
+		if (vec1.size() != vec2.size()) return resp;
+
+		for (size_t i = 0; i < vec1.size(); i++)
+			resp.push_back(lerp(vec1[0], vec2[0], factor));
+
+		return resp;
+	}
+
 }
 
 #endif

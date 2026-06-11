@@ -1,39 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   has_name.hpp                                       :+:      :+:    :+:   */
+/*   HttpResponseConversor.hpp                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/20 11:11:34 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/11 17:10:45 by bruno-valer      ###   ########.fr       */
+/*   Created: 2026/06/11 11:27:57 by bruno-valer       #+#    #+#             */
+/*   Updated: 2026/06/11 16:19:13 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef HAS_NAME_HPP
-# define HAS_NAME_HPP
+#ifndef HTTP_RESPONSE_CONVERSOR_HPP
+# define HTTP_RESPONSE_CONVERSOR_HPP
 
 # include <string>
 
-namespace segregation
+class HttpResponse;
+
+class HttpResponseConversor
 {
-	class has_name
-	{
 	protected:
-		std::string	_name;
+		const HttpResponse &_res;
 	public:
-		has_name(): _name() {}
-		has_name(std::string &name): _name(name) {}
-		~has_name() {};
+		HttpResponseConversor(const HttpResponse &res): _res(res) {};
+		virtual ~HttpResponseConversor() {};
 
-		bool	operator==(const has_name &other) const
-		{
-			if (this == &other) return true;
-			return _name == other._name;
-		}
-
-		const std::string	&getName() const { return _name; }
-	};
-}
+		virtual void	convert(std::string &response) const = 0;
+};
 
 #endif

@@ -6,14 +6,13 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 02:31:28 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/10 23:20:15 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/11 17:35:24 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef REQUEST_BUILDER_HPP
-# define REQUEST_BUILDER_HPP
+#ifndef HTTP_REQUEST_BUILDER_HPP
+# define HTTP_REQUEST_BUILDER_HPP
 
-# include <unordered_map>
 # include <string>
 
 # include "HttpRequest.hpp"
@@ -31,45 +30,7 @@ private:
 	bool											_is_complete;
 	size_t											_cursor;
 
-public:
-	SocketConnection *connection;
-	RequestBuilder(SocketConnection *conn)
-		: _req(conn), _buffer(), _body_start(0), _is_request_line_processed(false), _is_complete(false), _cursor(0), connection(conn) {}
-	~RequestBuilder() {}
-
-	HttpRequest	build() const { return _req; }
-
-	/* complete e true nesse metodos quando a quantidade lida e menor do que o `chunck-size` */
-	void	addToBuffer(const std::string &buff, bool complete = false)
-	{
-		if (_is_complete) return;
-		_buffer += buff;
-		if (_body_start > 0)
-		{
-			if ( _req.method != RequestMethod::GET)
-			{
-				const HttpRequest &req = _req;
-				if (req.headers.content_length().empty())
-				{
-					_is_complete = complete;
-					return;
-				}
-				size_t	body_size = _buffer.size() - _body_start;
-				_is_complete = body_size >= std::atoi(req.headers.content_length().c_str());
-				_req.body = _buffer.substr(_body_start, body_size);
-			}
-			_is_complete = true;
-			return;
-		}
-		size_t	idx = _buffer.find("\r\n\r\n");
-		if (idx != std::string::npos)
-		{
-			_body_start = idx + 4;
-			processHeader(idx - 1);
-		}
-	}
-
-	void	processHeader(size_t last)
+	void	_processHeader(size_t last)
 	{
 		if (!_is_request_line_processed)
 		{
@@ -101,6 +62,45 @@ public:
 			_cursor = _buffer.find_first_of('\r', _cursor);
 			std::string	value = _buffer.substr(begin, _cursor - begin);
 			_req.headers[key] = value;
+		}
+		_verifyCompletion();
+	}
+
+	void	_verifyCompletion()
+	{
+		if (_body_start == 0) return;
+
+		if ( _req.method != RequestMethod::GET)
+		{
+			const HttpRequest &req = _req;
+			int	body_size = _buffer.size() - _body_start;
+			_is_complete = body_size >= std::atoi(req.headers.content_length().c_str());
+			_req.body = _buffer.substr(_body_start, body_size);
+		}
+		_is_complete = true;
+}
+
+public:
+	SocketConnection *connection;
+	RequestBuilder(SocketConnection *conn)
+		: _req(conn), _buffer(), _body_start(0), _is_request_line_processed(false), _is_complete(false), _cursor(0), connection(conn) {}
+	~RequestBuilder() {}
+
+	HttpRequest	build() const { return _req; }
+
+	/* complete e true nesse metodos quando a quantidade lida e menor do que o `chunck-size` */
+	void	addToBuffer(const std::string &buff)
+	{
+		if (_is_complete) return;
+		_buffer += buff;
+		if (buff.size() > 0)
+		_verifyCompletion();
+		if (_body_start > 0) return;
+		size_t	idx = _buffer.find("\r\n\r\n");
+		if (idx != std::string::npos)
+		{
+			_body_start = idx + 4;
+			_processHeader(idx - 1);
 		}
 	}
 

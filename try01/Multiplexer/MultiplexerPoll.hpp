@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 17:06:31 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/10 14:33:40 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/11 13:45:19 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ class MultiplexerPoll: public IMultiplexer
 			pollfd	poll_fd;
 
 			poll_fd.fd		= socket->fd();
-			poll_fd.events	= POLLIN;
+			poll_fd.events	= POLLIN | POLLOUT | POLLERR | POLLHUP | POLLNVAL;
 			poll_fd.revents	= 0;
 
 			sockets::iterator	it = std::lower_bound(_sockets.begin(), _sockets.end(), socket);
@@ -66,6 +66,7 @@ class MultiplexerPoll: public IMultiplexer
 		std::string wait(SocketEventList &events)
 		{
 			events.clear();
+			if (_pollfds.empty()) return "";
 			int ret = poll(&_pollfds[0], _pollfds.size(), -1);
 			if (ret < 0) return strerror(errno);
 			for (size_t i = 0; i < _sockets.size(); i++)

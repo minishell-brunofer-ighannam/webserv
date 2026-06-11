@@ -6,14 +6,13 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 02:13:29 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/10 23:21:58 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/11 17:35:21 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef REQUEST_HPP
-# define REQUEST_HPP
+#ifndef HTTP_REQUEST_HPP
+# define HTTP_REQUEST_HPP
 
-# include <unordered_map>
 # include <string>
 
 # include "SocketConnection.hpp"

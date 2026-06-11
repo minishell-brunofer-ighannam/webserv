@@ -1,40 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Server.hpp                                         :+:      :+:    :+:   */
+/*   HttpResponseConversor_1_1.hpp                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/06/10 02:08:12 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/11 17:42:16 by bruno-valer      ###   ########.fr       */
+/*   Created: 2026/06/11 11:35:55 by bruno-valer       #+#    #+#             */
+/*   Updated: 2026/06/11 16:19:27 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SERVER_HPP
-# define SERVER_HPP
+#ifndef HTTP_RESPONSE_CONVERSOR_1_1_HPP
+# define HTTP_RESPONSE_CONVERSOR_1_1_HPP
 
-# include "HttpRequest.hpp"
-# include "HttpResponse.hpp"
+# include <string>
 
-class Server
+# include "HttpResponseConversor.hpp"
+
+class HttpResponseConversor_1_1: public HttpResponseConversor
 {
 private:
-
+	void	_convert_set_cookies(std::string &res) const;
 
 public:
-	Server() {}
-	~Server() {}
+	HttpResponseConversor_1_1(const HttpResponse &res): HttpResponseConversor(res) {};
+	~HttpResponseConversor_1_1() {};
 
-	void	handleRequest(const HttpRequest &req, HttpResponse &res)
-	{
-		(void)req;
-		res.statusCode(200, "OK");
-		if (!req.body.empty())
-			res.body("Voce enviou:\n\n" + req.body);
-		else
-			res.body("Hello, World!\n\nEu sou o Bruno!");
-		res.send(ResponseHTTPVersion::HTTP_1_1);
-	}
+	void	convert(std::string &res) const;
 };
 
 #endif

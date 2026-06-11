@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 20:54:12 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/09 21:45:05 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/11 16:02:06 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ class MultiplexerEpoll: public IMultiplexer
 
 			epoll_event	event;
 
-			event.events = EPOLLIN;
+			event.events = EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLHUP;
 			event.data.ptr = socket;
 			epoll_ctl(_epollfd, EPOLL_CTL_ADD, socket->fd(), &event);
 		}
@@ -60,7 +60,7 @@ class MultiplexerEpoll: public IMultiplexer
 			int n = epoll_wait(_epollfd, epoll_events, 1024, -1);
 			if (n < 0)
 				return strerror(errno);
-			for (size_t i = 0; i < n; i++)
+			for (int i = 0; i < n; i++)
 			{
 				SocketEvent	event;
 
