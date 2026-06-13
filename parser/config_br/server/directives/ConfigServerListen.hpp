@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/07 19:19:58 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/10 21:47:16 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/13 00:27:18 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ struct ConfigServerListen
 	/// Filtro de accept do FreeBSD (SO_ACCEPTFILTER), antes de listen().
 	/// Equivalente ao deferred do Linux — só entrega a conexão
 	/// ao servidor quando dados chegam. String vazia = desabilitado.
-	std::string accept_filter;
+	// std::string accept_filter;
 
 	// ----------------------------------------------------------------
 	// TCP Keepalive — aplicado após accept() void setsockopt
@@ -142,9 +142,34 @@ struct ConfigServerListen
 		ssl(false), http2(false), default_server(false),
 		reuseport(false), ipv6only(false), proxy_protocol(false),
 		deferred(false), bind(false),
-		backlog(511), rcvbuf(0), sndbuf(0), accept_filter(),
+		backlog(511), rcvbuf(0), sndbuf(0),
 		keepalive(KeepAlive::OFF), keepalive_time(0),
 		keepalive_intvl(0), keepalive_probes(0) {}
 };
+
+std::ostream	&operator<<(std::ostream &os, const ConfigServerListen &config)
+{
+	os << "address: " << utils::to_string(config.address) << "\n"
+		<< "port: " << utils::to_string(config.port) << "\n"
+		<< "is_unix: " << utils::to_string(config.is_unix) << "\n"
+		<< "is_ipv6: " << utils::to_string(config.is_ipv6) << "\n"
+		<< "is_ipv4: " << utils::to_string(config.is_ipv4) << "\n"
+		<< "ssl: " << utils::to_string(config.ssl) << "\n"
+		<< "http2: " << utils::to_string(config.http2) << "\n"
+		<< "default_server: " << utils::to_string(config.default_server) << "\n"
+		<< "reuseport: " << utils::to_string(config.reuseport) << "\n"
+		<< "ipv6only: " << utils::to_string(config.ipv6only) << "\n"
+		<< "proxy_protocol: " << utils::to_string(config.proxy_protocol) << "\n"
+		<< "deferred: " << utils::to_string(config.deferred) << "\n"
+		<< "bind: " << utils::to_string(config.bind) << "\n"
+		<< "backlog: " << utils::to_string(config.backlog) << "\n"
+		<< "rcvbuf: " << utils::to_string(config.rcvbuf) << "\n"
+		<< "sndbuf: " << utils::to_string(config.sndbuf) << "\n"
+		<< "keepalive: " << utils::to_string(config.keepalive) << "\n"
+		<< "keepalive_time: " << utils::to_string(config.keepalive_time) << "\n"
+		<< "keepalive_intvl: " << utils::to_string(config.keepalive_intvl) << "\n"
+		<< "keepalive_probes: " << utils::to_string(config.keepalive_probes) << "\n";
+	return os;
+}
 
 #endif

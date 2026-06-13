@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/07 19:20:20 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/07 19:33:00 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/13 00:15:33 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,18 @@
 
 class ConfigServerSsl {
 	private:
-		std::string					_certificate;					// ssl_certificate
-		std::string					_certificate_key;				// ssl_certificate_key
-		std::vector<std::string>	_protocols;						// ssl_protocols
-		std::string					_ciphers;						// ssl_ciphers
-		std::string					_session_cache;					// ssl_session_cache
-		int							_session_timeout = 300;			// ssl_session_timeout
-		bool						_prefer_server_ciphers = false;
+		std::string					certificate;				// ssl_certificate
+		std::string					certificate_key;			// ssl_certificate_key
+		std::vector<std::string>	protocols;					// ssl_protocols
+		std::string					ciphers;					// ssl_ciphers
+		std::string					session_cache;				// ssl_session_cache
+		int							session_timeout;			// ssl_session_timeout
+		bool						prefer_server_ciphers;
 
 	public:
-
+		ConfigServerSsl()
+			: certificate(), certificate_key(), protocols(), ciphers(),
+			session_cache(), session_timeout(300), prefer_server_ciphers(false) {}
 };
 
 #endif
