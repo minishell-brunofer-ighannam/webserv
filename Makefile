@@ -1,13 +1,21 @@
 NAME = webserver
 
-INCLUDES = 
+INCLUDES = -I. -Ilib -Ilib/segregation -Ilib/http -Ilib/text -Ilib/utils -Ilib/schema \
+           -Iparser/lexer -Iparser/parser -Iparser/parser/visitors \
+           -Iparser/parser/visitors/ParserVisitorValidator
 
 TEST_INCLUDES = -I lib/schema
 
 CC = c++
-CFLAGS = -Wall -Wextra -Werror -std=c++98 -g3 $(INCLUDES)
+CFLAGS = -Wall -Wextra -Werror -std=c++17 -g3 $(INCLUDES)
 
-SRC = main.cpp
+SRC = main.cpp \
+      config/ConfigBuilderVisitor.cpp \
+      config/GlobalConfig.cpp \
+      config/HttpConfig.cpp \
+      config/ServerConfig.cpp \
+      config/LocationConfig.cpp \
+      config/WebServerConfig.cpp
 
 TEST_SCHEMA_SRC = tests/schema/test_string.cpp
 
