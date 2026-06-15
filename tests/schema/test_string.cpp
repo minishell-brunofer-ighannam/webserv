@@ -6,7 +6,7 @@
 /*   By: ighannam <ighannam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 10:18:08 by ighannam          #+#    #+#             */
-/*   Updated: 2026/06/15 18:30:29 by ighannam         ###   ########.fr       */
+/*   Updated: 2026/06/15 18:33:03 by ighannam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int main()
 
     schema_result_string expected = schema_result_string::failure(schema_error("NAME", "Minimal lenght not reached. Must be >= 20"));
     failures += assert(expected, test_schema_str_minLenth_fail(), "test_schema_str_minLenth_fail");
+    return failures;
 }
 
 schema_result_string test_schema_str_minLenth_fail()
