@@ -47,7 +47,7 @@ namespace text
 
 			void	setColor(std::vector<double> &arr) { _color = arr; }
 
-			rgb	interpolate(const rgb &other, double factor) const { return rgb(utils::lerp(_color, other._color, factor)); }
+			rgb	interpolate(const rgb &other, double factor) const { return rgb(utils::lerp(_color[0], other._color[0], factor), utils::lerp(_color[1], other._color[1], factor), utils::lerp(_color[2], other._color[2], factor)); }
 
 			std::string	toAnsi() const
 			{
