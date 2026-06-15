@@ -83,12 +83,3 @@ int main()
 
     return 0;
 }
-
-// #include "container.hpp"
-// #include <memory>
-
-// int main()
-// {
-//     container<std::vector, int> container_teste;
-//     container_teste.getTeste()
-// }

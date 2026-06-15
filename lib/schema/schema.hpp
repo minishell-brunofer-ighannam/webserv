@@ -17,6 +17,8 @@
 # include "schema_number.hpp"
 # include "schema_bool.hpp"
 
+typedef schema::detail::error schema_error;
+
 typedef schema::detail::schema_string schema_string;
 typedef schema::detail::result<std::string> schema_result_string;
 
