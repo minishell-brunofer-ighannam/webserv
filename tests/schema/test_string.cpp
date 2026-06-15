@@ -6,7 +6,7 @@
 /*   By: ighannam <ighannam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 10:18:08 by ighannam          #+#    #+#             */
-/*   Updated: 2026/06/15 18:11:42 by ighannam         ###   ########.fr       */
+/*   Updated: 2026/06/15 18:30:29 by ighannam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int main()
 schema_result_string test_schema_str_minLenth_fail()
 {
     std::string str = "Isadora";
-    schema_string name_schema =  schema::string().minLength(20).name("NAME");
+    schema_string name_schema =  schema::string().minLength(20);
     return name_schema.parse(str);
 }
 
