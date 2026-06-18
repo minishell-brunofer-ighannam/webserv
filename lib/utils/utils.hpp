@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/02 15:00:29 by ighannam          #+#    #+#             */
-/*   Updated: 2026/06/13 16:59:09 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/18 13:09:15 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ namespace utils
 	template <typename T>
 	bool fequal(T value_one, T value_two, double eps = 1e-9)
 	{
-		return abs(value_one - value_two) <= eps;
+		return abs(value_one - value_two) <= (eps  + 1e-9);
 	}
 
 	inline bool fequal(float value_one, float value_two, double eps = 1e-4)
