@@ -100,7 +100,6 @@ tests_verbose: tests
 tests: clean $(LIB) $(TEST_LIB)
 	@clear
 	@errors=0; \
-	setup=$$(find tests/@setup -type f -name "*.cpp" | tr "\n" " "); \
 	tests=$$(find tests -type d -name "*_test"); \
 	isin() { local list="$$1"; local value="$$2"; if [ -z $$value ]; then echo 0; else echo $$(echo $$list | tr " ," "\n" | perl -0pe 's/\n+/\n/g' |  grep -q $$value && echo 1 || echo 0); fi; }; \
 	clear_name() { local name="$$1"; echo $$(basename $$name | sed -E 's/([_]?+test[_]?+)|(\..+)//g'); }; \
