@@ -6,7 +6,7 @@
 /*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/30 19:50:46 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/19 13:50:19 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/19 20:42:10 by bruno-valer      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,7 @@ public:
 	 */
 	bool				nextIs(const std::string &str)
 	{
-		if (str.size() + _idx > size())
+		if (str.size() + _idx > size() || str.empty())
 			return false;
 		for (size_t i = 0; i < str.size(); i++)
 			if (_src[_idx + i] != str[i])
