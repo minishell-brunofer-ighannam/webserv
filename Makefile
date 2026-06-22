@@ -42,6 +42,10 @@ SRC = main.cpp \
 
 LIB_SRC = $(shell find lib -name "main.cpp" -prune -o -type f -name "*.cpp" -print | tr "\n" " ")
 
+CONFIG_SRC = config/GlobalConfig.cpp config/HttpConfig.cpp config/LocationConfig.cpp config/ServerConfig.cpp config/WebServerConfig.cpp
+
+INTEGRATION_SRC = config/ConfigBuilderVisitor.cpp
+
 
 
 OBJ = $(SRC:%.cpp=%.o)
@@ -100,7 +104,11 @@ tests:
 	fi;
 
 sub-test:
-	$(CC) $(CFLAGS17) $(INCLUDES) $(TEST_SRC) $(LIB_SRC) -o $(TEST_PROGRAM) && ./$(TEST_PROGRAM) $(TEST_MODE); \
+	extra_src=""; \
+	for f in $(TEST_SRC); do \
+		case $$f in *integration_test*) extra_src="$(INTEGRATION_SRC)"; break;; esac; \
+	done; \
+	$(CC) $(CFLAGS17) $(INCLUDES) $(TEST_SRC) $(LIB_SRC) $(CONFIG_SRC) $$extra_src -o $(TEST_PROGRAM) && ./$(TEST_PROGRAM) $(TEST_MODE); \
 	status=$$?; \
 	rm -f $(TEST_PROGRAM); \
 	exit $$status
