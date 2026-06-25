@@ -31,6 +31,7 @@ INCLUDES = $(shell find . -name ".git*" -o -name "$(VENV)*" -prune -o -type d -p
 
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -g3 $(INCLUDES)
+
 CFLAGS17 = -Wall -Wextra -Werror -std=c++17 -g3 $(INCLUDES)
 
 
@@ -44,11 +45,15 @@ TEST_SETTUP_OBJ = $(TEST_SETTUP_SRC:%.cpp=%.test_o)
 # TEST_SCHEMA_SRC = $(shell find tests/schema_test -name "*.cpp")
 
 SRC = main.cpp \
-	$(shell find config -name "main.cpp" -prune -o -name "*.cpp" -print | tr "\n" " ")
+	$(shell find config try01 -name "main.cpp" -prune -o -name "*.cpp" -print | tr "\n" " ")
 
 LIB = lib/lib
 LIB_SRC = $(shell find lib -name "main.cpp" -prune -o -type f -name "*.cpp" -print | tr "\n" " ")
 LIB_OBJ = $(LIB_SRC:%.cpp=%.lib)
+
+CONFIG_SRC = config/GlobalConfig.cpp config/HttpConfig.cpp config/LocationConfig.cpp config/ServerConfig.cpp config/WebServerConfig.cpp
+
+INTEGRATION_SRC = config/ConfigBuilderVisitor.cpp
 
 
 
@@ -154,8 +159,12 @@ $(TEST_LIB): $(TEST_SETTUP_OBJ)
 %.test_o: %.cpp
 	@$(CC) $(CFLAGS17) $(INCLUDES) -c $< -o $@
 
-sub-test: $(LIB) $(TEST_LIB)
-	$(CC) $(CFLAGS17) $(INCLUDES) $(TEST_SRC) $(TEST_LIB) $(LIB) -o $(TEST_PROGRAM) && ./$(TEST_PROGRAM) $(TEST_MODE); \
+sub-test:
+	extra_src=""; \
+	for f in $(TEST_SRC); do \
+		case $$f in *integration_test*) extra_src="$(INTEGRATION_SRC)"; break;; esac; \
+	done; \
+	$(CC) $(CFLAGS17) $(INCLUDES) $(TEST_SRC) $(LIB_SRC) $(CONFIG_SRC) $$extra_src -o $(TEST_PROGRAM) && ./$(TEST_PROGRAM) $(TEST_MODE); \
 	status=$$?; \
 	rm -f $(TEST_PROGRAM); \
 	exit $$status
