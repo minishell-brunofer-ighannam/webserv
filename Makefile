@@ -164,7 +164,7 @@ sub-test:
 	for f in $(TEST_SRC); do \
 		case $$f in *integration_test*) extra_src="$(INTEGRATION_SRC)"; break;; esac; \
 	done; \
-	$(CC) $(CFLAGS17) $(INCLUDES) $(TEST_SRC) $(LIB_SRC) $(CONFIG_SRC) $$extra_src -o $(TEST_PROGRAM) && ./$(TEST_PROGRAM) $(TEST_MODE); \
+	$(CC) $(CFLAGS17) $(INCLUDES) $(TEST_SRC) $(TEST_LIB) $(LIB_SRC) $(CONFIG_SRC) $$extra_src -o $(TEST_PROGRAM) && ./$(TEST_PROGRAM) $(TEST_MODE); \
 	status=$$?; \
 	rm -f $(TEST_PROGRAM); \
 	exit $$status
