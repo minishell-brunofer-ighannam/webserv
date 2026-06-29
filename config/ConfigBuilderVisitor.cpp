@@ -252,6 +252,10 @@ void ConfigBuilderVisitor::_handleLocationDirective(Directive& d, LocationConfig
         case ParserTokenType::PT_FASTCGI_INDEX:
             lc->setFastcgiIndex(d.values[0].getContent());
             break;
+        case ParserTokenType::PT_CGI_EXTENSION:
+            lc->addCgiExtension(std::make_pair(d.values[0].getContent(), 
+                                        d.values[1].getContent()));
+            break;
         case ParserTokenType::PT_TRY_FILES:
             for (size_t i = 0; i < d.values.size(); ++i)
                 lc->addTryFile(d.values[i].getContent());

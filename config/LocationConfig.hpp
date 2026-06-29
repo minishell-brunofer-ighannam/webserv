@@ -27,6 +27,7 @@ class LocationConfig: public ConfigLeaf{
         std::list<std::pair<std::string, std::string> > _add_header;
         std::list<std::pair<std::string, std::string> > _proxy_set_header;
         std::map<std::string, std::string> _cgi;
+        std::map<std::string, std::string> _cgi_extensions;
     public:
         LocationConfig() : _modifier(MOD_NONE), _redirect(0, ""), _autoindex(false) {}
         void setPath(const std::string& path)                          { _path = path; }
@@ -55,12 +56,14 @@ class LocationConfig: public ConfigLeaf{
         const std::list<std::pair<std::string,std::string> > &getAddHeader() const       { return _add_header; }
         const std::list<std::pair<std::string,std::string> > &getProxySetHeader() const  { return _proxy_set_header; }
         const std::map<std::string, std::string> &getCgi() const       { return _cgi; }
+        const std::map<std::string, std::string> &getCgiExtensions() const       { return _cgi_extensions; }
         void addMethod(HttpMethod method)                              { _methods.push_back(method); }
         void addIndex(const std::string& index)                        { _index.push_back(index); }
         void addTryFile(const std::string& v)                          { _try_files.push_back(v); }
         void addAddHeader(const std::string& k, const std::string& v)  { _add_header.push_back(std::make_pair(k, v)); }
         void addProxySetHeader(const std::string& k, const std::string& v) { _proxy_set_header.push_back(std::make_pair(k, v)); }
         void addCgi(const std::pair<const std::string, const std::string>& cgi) { _cgi[cgi.first] = cgi.second; }
+        void addCgiExtension(const std::pair<const std::string, const std::string>& cgi_extension) { _cgi_extensions[cgi_extension.first] = cgi_extension.second; }
         bool matches(const std::string &uri) const;
 };
 

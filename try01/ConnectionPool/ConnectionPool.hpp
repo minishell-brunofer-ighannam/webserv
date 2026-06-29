@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionPool.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
+/*   By: ighannam <ighannam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 01:54:10 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/11 17:04:26 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/28 23:40:23 by ighannam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@
 # include "IMultiplexer.hpp"
 # include "Server.hpp"
 # include "HttpRequestBuilder.hpp"
+#include "CgiProcess.hpp"
+#include "SocketPipeRead.hpp"
+#include "SocketPipeWrite.hpp"
 
 
 class HttpRequestObservers
@@ -65,6 +68,7 @@ private:
 	IMultiplexer				*_multiplexer;
 	HttpRequestObservers		_http_request_observers;
 	std::list<RequestBuilder>	_pending_request;
+	std::list<CgiProcess*>		_running_cgis;
 
 	RequestBuilder *_findPending(SocketConnection *conn)
 	{
@@ -140,6 +144,14 @@ public:
 		return true;
 	}
 
+	bool addPipe(Socket *pipe_socket)
+	{
+		if (!pipe_socket || !pipe_socket->isValid()) 
+			return false;
+		_multiplexer->add(pipe_socket);
+		return true;
+	}
+
 	void	waitConnections()
 	{
 		std::cout << "Waitting for connections!\n";
@@ -168,34 +180,62 @@ public:
 					_multiplexer->add(connection);
 					continue;
 				}
-				// socket is SocketType::CONNETION
-
-				SocketConnection	*conn = static_cast<SocketConnection*>(event.socket);
-				if (!event.error.empty())
+				else if (event.socket->getType() == SocketType::CONNECTION)
 				{
-					_multiplexer->remove(conn);
-					continue;
-				}
-				RequestBuilder *existing = _findPending(conn);
-				if (existing)
-				{
-					if (_handleRequest(*existing))
+					SocketConnection	*conn = static_cast<SocketConnection*>(event.socket);
+					if (!event.error.empty() || event.eof)
 					{
-						_removePending(conn);
 						_multiplexer->remove(conn);
+						continue;
 					}
+					RequestBuilder *existing = _findPending(conn);
+					if (existing)
+					{
+						if (_handleRequest(*existing))
+						{
+							_removePending(conn);
+							_multiplexer->remove(conn);
+						}
+					}
+					else
+					{
+						_pending_request.push_back(RequestBuilder(conn));
+						if (_handleRequest(_pending_request.back()))
+						{
+							_pending_request.pop_back();
+							_multiplexer->remove(conn);
+						}
+					}
+				}
+				else if (event.socket->getType() == SocketType::PIPE_READ)
+				{
+					std::cout << "[pipe read event] fd=" << event.socket->fd()
+					<< " readable=" << event.readable
+					<< " writable=" << event.writable
+					<< " eof=" << event.eof
+					<< " error=" << event.error << std::endl;
+				}
+				else if (event.socket->getType() == SocketType::PIPE_WRITE)
+				{
+					std::cout << "[pipe write event] fd=" << event.socket->fd()
+					<< " readable=" << event.readable
+					<< " writable=" << event.writable
+					<< " error=" << event.error << std::endl;
 				}
 				else
 				{
-					_pending_request.push_back(RequestBuilder(conn));
-					if (_handleRequest(_pending_request.back()))
-					{
-						_pending_request.pop_back();
-						_multiplexer->remove(conn);
-					}
-				}
+					std::cerr << "unknown socket type " << event.socket->getType();
+				}		
 			}
 		}
+	}
+
+	void addCgi(CgiProcess *cgi)
+	{
+		if (!cgi) return;
+		_multiplexer->add(cgi->stdinPipe());
+		_multiplexer->add(cgi->stdoutPipe());
+		_running_cgis.push_back(cgi);
 	}
 };
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MultiplexerSelect.hpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
+/*   By: ighannam <ighannam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 17:44:46 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/09 21:17:48 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/28 19:27:34 by ighannam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,13 +97,20 @@ class MultiplexerSelect: public IMultiplexer
 				{
 					int			err;
 					socklen_t	len = sizeof(err);
-					if (getsockopt(fd, SOL_SOCKET, SO_ERROR, &err, &len) < 0)
+					if (Socket::usesGetSockOpt(event.socket->getType()))
 					{
-						events.clear();
-						return strerror(errno);
+						if (getsockopt(fd, SOL_SOCKET, SO_ERROR, &err, &len) < 0)
+						{
+							events.clear();
+							return strerror(errno);
+						}
+						if (err != 0)
+							event.error = "select error: " + std::string(strerror(err));
 					}
-					if (err != 0)
-						event.error = "select error: " + std::string(strerror(err));
+					else
+					{
+						event.error = "pipe error";
+					}
 				}
 				if (event.readable || event.writable || !event.error.empty())
 					events.push_back(event);

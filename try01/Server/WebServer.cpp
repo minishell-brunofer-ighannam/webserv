@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   WebServer.cpp                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ighannam <ighannam@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/28 19:42:37 by ighannam          #+#    #+#             */
+/*   Updated: 2026/06/28 20:59:50 by ighannam         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "WebServer.hpp"
 #include "ConnectionPool.hpp"
 #include "SocketListenner.hpp"
@@ -8,6 +20,9 @@
 #include "GlobalConfig.hpp"
 #include "HttpConfig.hpp"
 #include "ServerConfig.hpp"
+
+#include <unistd.h>
+#include "SocketPipeRead.hpp"
 
 WebServer::WebServer() : _multiplexer(NULL) {}
 
@@ -62,5 +77,12 @@ void WebServer::start(WebServerConfig* config)
 			pool.addListenner(sock, srv);
 		}
 	}
+
+	// int fds[2];
+	// pipe(fds);
+	// write(fds[1], "hello", 5);
+	// close(fds[1]);
+	// pool.addPipe(new SocketPipeRead(fds[0]));
+
 	pool.waitConnections();
 }

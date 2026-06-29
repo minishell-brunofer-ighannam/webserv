@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
+/*   By: ighannam <ighannam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 11:21:30 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/11 15:27:46 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/28 19:14:31 by ighannam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ struct SocketType
 	{
 		LISTENNER,
 		CONNECTION,
+		PIPE_READ,
+		PIPE_WRITE
 	};
 };
 
@@ -77,6 +79,10 @@ class Socket: public segregation::has_type<SocketType::type>
 		{
 			for (size_t i = 0; i < _errors.size(); i++)
 				std::cerr << _errors[i] << "\n";
+		}
+		static bool usesGetSockOpt(SocketType::type t)
+		{
+			return t == SocketType::LISTENNER || t == SocketType::CONNECTION;
 		}
 };
 

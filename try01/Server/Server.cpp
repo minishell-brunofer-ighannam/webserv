@@ -44,10 +44,27 @@ bool Server::_methodAllowed(HttpRequest::Method method, const std::list<HttpMeth
 void Server::_dispatch(const HttpRequest &req, HttpResponse &res,
                const ServerConfig &server, const LocationConfig &location)
 {
-    (void)server;
-    const std::map<std::string, std::string>& cgi = location.getCgi();
-    if (cgi.count("fastcgi_pass"))
-        return _serveCgi(req, res, location);
+    //const std::map<std::string, std::string>& cgi = location.getCgi();
+    // if (cgi.count("fastcgi_pass"))
+    //     return _serveCgi(req, res, location);
+    const std::map<std::string, std::string>& cgi_ext = location.getCgiExtensions();
+    if (!cgi_ext.empty())
+    {
+        // extrair só o path "puro" (sem query string)
+        std::string clean_path = req.path;
+        size_t qpos = clean_path.find('?');
+        if (qpos != std::string::npos)
+            clean_path = clean_path.substr(0, qpos);
+
+        // extrair extensão
+        size_t dot = clean_path.rfind('.');
+        if (dot != std::string::npos)
+        {
+            std::string ext = clean_path.substr(dot);
+            if (cgi_ext.count(ext))
+                return _serveCgi(req, res, location, server);
+        }
+    }
     if (req.method == RequestMethod::POST && !location.getUploadDir().empty())
         return _serveUpload(req, res, location);
     if (req.method == RequestMethod::DELETE && !location.getUploadDir().empty())

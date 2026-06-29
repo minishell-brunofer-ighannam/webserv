@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MultiplexerEpoll.hpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
+/*   By: ighannam <ighannam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 20:54:12 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/11 16:02:06 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/28 20:39:52 by ighannam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,15 +71,25 @@ class MultiplexerEpoll: public IMultiplexer
 				event.writable	= epoll_events[i].events & EPOLLOUT;
 				if (epoll_events[i].events & EPOLLERR)
 				{
-					int			err;
-					socklen_t	len = sizeof(err);
-					if (getsockopt(event.socket->fd(), SOL_SOCKET, SO_ERROR, &err, &len) < 0)
-						return strerror(errno);
-					if (err != 0)
-						event.error = "epoll error: " + std::string(strerror(err));
+					if (Socket::usesGetSockOpt(event.socket->getType()))
+					{
+						int err;
+						socklen_t len = sizeof(err);
+						if (getsockopt(event.socket->fd(), SOL_SOCKET, SO_ERROR, &err, &len) < 0)
+							return strerror(errno);
+						if (err != 0)
+							event.error = "epoll error: " + std::string(strerror(err));
+					}
+					else
+					{
+						event.error = "pipe error";
+					}
 				}
 				else if (epoll_events[i].events & EPOLLHUP)
-					event.error = "epoll error: client has disconnected!";
+				{
+					// event.error = "epoll error: client has disconnected!";
+					event.eof = true;
+				}
 				events.push_back(event);
 			}
 			return "";

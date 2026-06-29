@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MultiplexerPoll.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
+/*   By: ighannam <ighannam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 17:06:31 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/11 13:45:19 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/28 20:39:15 by ighannam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,16 +83,26 @@ class MultiplexerPoll: public IMultiplexer
 				{
 					int			err;
 					socklen_t	len = sizeof(err);
-					if (getsockopt(_sockets[i]->fd(), SOL_SOCKET, SO_ERROR, &err, &len) < 0)
+					if (Socket::usesGetSockOpt(_sockets[i]->getType()))
 					{
-						events.clear();
-						return strerror(errno);
+						if (getsockopt(_sockets[i]->fd(), SOL_SOCKET, SO_ERROR, &err, &len) < 0)
+						{
+							events.clear();
+							return strerror(errno);
+						}
+						if (err != 0)
+							event.error = "poll error: " + std::string(strerror(err));
 					}
-					if (err != 0)
-						event.error = "poll error: " + std::string(strerror(err));
+					else
+					{
+						event.error = "pipe error";
+					}
 				}
 				else if (_pollfds[i].revents & POLLHUP)
-					event.error = "poll error: client has disconnected!";
+				{
+					//event.error = "poll error: client has disconnected!";
+					event.eof = true;
+				}
 				else if (_pollfds[i].revents & POLLNVAL)
 					event.error = "poll error: invalid fd '" + utils::to_string(_sockets[i]->fd()) + "'!";
 				events.push_back(event);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ArgAmountValidator.hpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bruno-valero <bruno-valero@student.42.f    +#+  +:+       +#+        */
+/*   By: ighannam <ighannam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 19:59:52 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/06 14:09:34 by bruno-valer      ###   ########.fr       */
+/*   Updated: 2026/06/28 20:00:19 by ighannam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,6 +191,7 @@ public:
 		.add(ParserTokenType::PT_PROXY_SET_HEADER, schema::unsigned_integer().between(2, 2).name("proxy_set_header args amount"))
 		.add(ParserTokenType::PT_FASTCGI_PASS, schema::unsigned_integer().between(1, 1).name("fast_cgi_pass args amount"))
 		.add(ParserTokenType::PT_FASTCGI_PARAM, schema::unsigned_integer().between(2, 2).name("fast_cgi_param args amount"))
+		.add(ParserTokenType::PT_CGI_EXTENSION, schema::unsigned_integer().between(2, 2).name("cgi_extension args amount"))
 		.add(ParserTokenType::PT_ERROR_PAGE, schema::unsigned_integer().between(2, unlimited).name("error_page args amount"))
 		.add(ParserTokenType::PT_ADD_HEADER, schema::unsigned_integer().between(2, 3).name("add_header args amount"))
 		.add(ParserTokenType::PT_EXPIRES, schema::unsigned_integer().between(1, 1).name("expires args amount"))
