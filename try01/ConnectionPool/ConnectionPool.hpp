@@ -6,7 +6,7 @@
 /*   By: ighannam <ighannam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 01:54:10 by bruno-valer       #+#    #+#             */
-/*   Updated: 2026/06/29 18:22:27 by ighannam         ###   ########.fr       */
+/*   Updated: 2026/06/30 20:03:12 by ighannam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include <map>
 # include <list>
 # include <vector>
+# include <signal.h>
+# include <sys/wait.h>
 
 # include "singleton.hpp"
 # include "IMultiplexer.hpp"
@@ -81,19 +83,35 @@ private:
 		return NULL;
 	}
 
-	CgiProcess *_findCgiByPipe(Socket *pipe_socket)
+	std::list<CgiProcess*>::iterator _findCgiByPipe(Socket *pipe_socket)
 	{
-		for (std::list<CgiProcess*>::iterator it = _running_cgis.begin();
-			it != _running_cgis.end(); ++it)
+		for (std::list<CgiProcess*>::iterator it = _running_cgis.begin(); it != _running_cgis.end(); ++it)
 		{
-			if ((*it)->stdinPipe() == pipe_socket ||
-				(*it)->stdoutPipe() == pipe_socket)
-			{
-				LOG_TRACE("fd conn _findCgiByPipe " << (*it)->clientConn()->fd() << "\n");
-				return *it;
-			}	
+			if ((*it)->stdinPipe()  == pipe_socket
+			|| (*it)->stdoutPipe() == pipe_socket)
+				return it;
 		}
-		return NULL;
+		return _running_cgis.end();
+	}
+
+	std::list<CgiProcess*>::iterator _findCgiByClient(SocketConnection *conn)
+	{
+		for (std::list<CgiProcess*>::iterator it = _running_cgis.begin(); it != _running_cgis.end(); ++it)
+		{
+			if ((*it)->clientConn() == conn)
+				return it;
+		}
+		return _running_cgis.end();
+	}
+
+	bool _isConnectionOwnedByCgi(SocketConnection *conn) const
+	{
+		for (std::list<CgiProcess*>::const_iterator it = _running_cgis.begin(); it != _running_cgis.end(); ++it)
+		{
+			if ((*it)->clientConn() == conn)
+				return true;
+		}
+		return false;
 	}
 
 	void	_removePending(SocketConnection *conn)
@@ -126,6 +144,58 @@ private:
 		if (is_request_complete)
 			_http_request_observers.notifyRequest(req_builder);
 		return is_request_complete;
+	}
+
+	enum CgiCleanupReason
+	{
+		CGI_NORMAL,
+		CGI_INTERNAL_ERROR,
+		CGI_CLIENT_GONE,
+		CGI_TIMEOUT
+	};
+
+	void _cleanupCgi(std::list<CgiProcess*>::iterator it, CgiCleanupReason reason)
+	{
+		CgiProcess *cgi = *it;
+		SocketConnection *conn = cgi->clientConn();
+		pid_t pid = cgi->pid();
+		
+		// 1. Enviar resposta (se cliente ainda vivo).
+		if (reason == CGI_NORMAL)
+		{
+			cgi->buildAndSendResponse();
+		}
+		else if (reason == CGI_INTERNAL_ERROR)
+		{
+			HttpResponse res(conn);
+			res.statusCode(502, "Bad Gateway");
+			res.body("Bad Gateway\n");
+			res.send(ResponseHTTPVersion::HTTP_1_1);
+		}
+		else if (reason == CGI_TIMEOUT)
+		{
+			HttpResponse res(conn);
+			res.statusCode(504, "Gateway Timeout");
+			res.body("Gateway Timeout\n");
+			res.send(ResponseHTTPVersion::HTTP_1_1);
+		}
+		// CGI_CLIENT_GONE: não envia nada.
+		
+		// 2. Garantir que o filho morreu e reapar.
+		::kill(pid, SIGKILL);
+		waitpid(pid, NULL, 0);  // bloqueia até reapar. SIGKILL torna isso quase instantâneo.
+		
+		// 3. Remover pipes do multiplexer (destrói os SocketPipeRead/Write).
+		_multiplexer->remove(cgi->stdinPipe());
+		_multiplexer->remove(cgi->stdoutPipe());
+		
+		// 4. Remover CGI da lista e destruir.
+		_running_cgis.erase(it);
+		delete cgi;
+		
+		// 5. Remover client conn (se não foi o próprio motivo).
+		if (reason != CGI_CLIENT_GONE)
+			_multiplexer->remove(conn);
 	}
 
 	// void	_processPendingRequests()
@@ -201,6 +271,10 @@ public:
 					SocketConnection	*conn = static_cast<SocketConnection*>(event.socket);
 					if (!event.error.empty() || event.eof)
 					{
+						std::list<CgiProcess*>::iterator cit = _findCgiByClient(conn);
+						if (cit != _running_cgis.end())
+							_cleanupCgi(cit, CGI_CLIENT_GONE);
+						
 						_multiplexer->remove(conn);
 						continue;
 					}
@@ -210,7 +284,8 @@ public:
 						if (_handleRequest(*existing))
 						{
 							_removePending(conn);
-							_multiplexer->remove(conn);
+							if (!_isConnectionOwnedByCgi(conn))
+        						_multiplexer->remove(conn);
 						}
 					}
 					else
@@ -219,29 +294,37 @@ public:
 						if (_handleRequest(_pending_request.back()))
 						{
 							_pending_request.pop_back();
-							_multiplexer->remove(conn);
+							if (!_isConnectionOwnedByCgi(conn))
+        						_multiplexer->remove(conn);
 						}
 					}
 				}
 				else if (event.socket->getType() == SocketType::PIPE_READ)
 				{
-					CgiProcess *cgi = _findCgiByPipe(event.socket);
-					LOG_TRACE("fd socket event: " << event.socket->fd());
-					if (cgi)
+					std::list<CgiProcess*>::iterator cit = _findCgiByPipe(event.socket);
+					if (cit == _running_cgis.end())
 					{
-						LOG_TRACE("fd conn waitConnections " << cgi->clientConn()->fd() << "\n");
-						cgi->onStdoutReadable();
-						/* code */
+						_multiplexer->remove(event.socket);
+						continue;
 					}
 					
+					if (event.readable || event.eof)
+						(*cit)->onStdoutReadable();
 					
+					if ((*cit)->isDone())
+						_cleanupCgi(cit, CGI_NORMAL);
 				}
 				else if (event.socket->getType() == SocketType::PIPE_WRITE)
 				{
-					CgiProcess *cgi = _findCgiByPipe(event.socket);
-					// LOG_TRACE("fd socket event: " << event.socket->fd());
-					// LOG_TRACE("fd conn waitConnections " << cgi->clientConn()->fd() << "\n");
-					cgi->onStdinWritable();
+					std::list<CgiProcess*>::iterator cit = _findCgiByPipe(event.socket);
+					if (cit == _running_cgis.end())
+					{
+						_multiplexer->remove(event.socket);
+						continue;
+					}
+					
+					if (event.writable)
+						(*cit)->onStdinWritable();
 				}
 				else
 				{
@@ -257,7 +340,6 @@ public:
 		_multiplexer->add(cgi->stdinPipe());
 		_multiplexer->add(cgi->stdoutPipe());
 		_running_cgis.push_back(cgi);
-		LOG_TRACE("fd conn addCgi " << cgi->clientConn()->fd() << "\n");
 	}
 };
 

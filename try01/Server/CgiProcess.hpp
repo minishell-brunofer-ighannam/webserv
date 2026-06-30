@@ -6,7 +6,7 @@
 /*   By: ighannam <ighannam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/28 22:19:23 by ighannam          #+#    #+#             */
-/*   Updated: 2026/06/29 18:36:04 by ighannam         ###   ########.fr       */
+/*   Updated: 2026/06/29 23:46:59 by ighannam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,16 @@ private:
     time_t _start_time;
     bool   _stdout_closed;
     HttpRequest _request;
+    CgiProcess(const CgiProcess&);
+    CgiProcess& operator=(const CgiProcess&);
 public:
     CgiProcess(SocketConnection *client, const HttpRequest &req,
                SocketPipeWrite *stdin_pipe, SocketPipeRead *stdout_pipe,
                pid_t pid);
-    CgiProcess(const CgiProcess& other);
     ~CgiProcess();
+    const std::string &stdoutBuffer() const { return _stdout_buffer; }
+    size_t bodyWriteOffset()  const { return _body_write_offset; }
+    size_t bodyToWriteSize()  const { return _body_to_write.size(); }
     void onStdinWritable();
     void onStdoutReadable();
     bool isDone() const;

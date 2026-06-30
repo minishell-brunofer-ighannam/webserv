@@ -6,7 +6,7 @@
 /*   By: ighannam <ighannam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/28 18:46:27 by ighannam          #+#    #+#             */
-/*   Updated: 2026/06/29 19:04:33 by ighannam         ###   ########.fr       */
+/*   Updated: 2026/06/30 20:08:50 by ighannam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ class SocketPipeRead : public Socket
 public:
     SocketPipeRead(int _fd): Socket(SocketType::PIPE_READ, _fd)
     {
-        LOG_TRACE("SocketPipeRead contructor with fd: " << _fd << "\n");
         int flags = fcntl(fd(), F_GETFL, 0);
         if (flags < 0)
             _errors.push_back(std::string("fcntl F_GETFL fail: ") + strerror(errno));

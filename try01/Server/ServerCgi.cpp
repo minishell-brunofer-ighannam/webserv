@@ -6,7 +6,7 @@
 /*   By: ighannam <ighannam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/28 21:08:03 by ighannam          #+#    #+#             */
-/*   Updated: 2026/06/29 17:29:17 by ighannam         ###   ########.fr       */
+/*   Updated: 2026/06/30 20:05:04 by ighannam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,16 +72,7 @@ void Server::_serveCgi(const HttpRequest &req, HttpResponse &res,
     if (!S_ISREG(st.st_mode))
         return _sendError(res, 403, "Forbidden", &req);
     
-
-
-    std::cout << "[cgi] script_path=" << script_path
-          << " script_dir=" << script_dir
-          << " interpreter=" << interpreter
-          << " query_string=" << query_string << std::endl;
-    
     std::vector<std::string> env = _buildCgiEnv(req, server, script_path, clean_path, query_string);
-    for (size_t i = 0; i < env.size(); ++i) 
-        std::cout << "[env] " << env[i] << std::endl;
 
     int fds_stdin[2];
     int fds_stdout[2];
@@ -146,8 +137,6 @@ void Server::_serveCgi(const HttpRequest &req, HttpResponse &res,
             return _sendError(res, 500, "Internal Server Error", &req);
         }
         CgiProcess *cgi = new CgiProcess(res.getConn(), req, stdin_pipe, stdout_pipe, pid_child);
-        LOG_TRACE("fd conn _ServerCgi " << res.getFd() << "\n");
-        LOG_TRACE("fd conn cggi " << cgi->clientConn()->fd() << "\n");
         ConnectionPool::getInstance().addCgi(cgi);
     }
 }
