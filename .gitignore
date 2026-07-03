@@ -15,3 +15,6 @@ core
 
 # Claude memory
 .claude/
+
+# Load test generated fixtures
+www/loadtest/
