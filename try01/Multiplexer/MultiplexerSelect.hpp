@@ -34,7 +34,10 @@ class MultiplexerSelect: public IMultiplexer
 
 	public:
 		MultiplexerSelect(): _sockets(), _main_read_set(), _main_write_set(), _main_error_set(), _max_fd(0), _timeout_ms(-1) {};
-		void setTimeout(int timeout_ms) { _timeout_ms = timeout_ms; }
+		void setTimeout(int timeout_ms) {
+			if (timeout_ms < 0 || timeout_ms > 1000)
+				timeout_ms = 1000; 
+			_timeout_ms = timeout_ms; }
 		~MultiplexerSelect() {};
 
 		void add(FileDescriptor *file_descriptor)

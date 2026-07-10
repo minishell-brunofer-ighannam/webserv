@@ -50,8 +50,7 @@ IMultiplexer* WebServer::_createMultiplexer(const WebServerConfig* config)
 
 	const HttpConfig* http = global ? global->getHttp() : NULL;
 	size_t keepalive = http ? http->getKeepaliveTimeout() : 0;
-	if (keepalive > 0)
-		mx->setTimeout(static_cast<int>(keepalive * 1000));
+	mx->setTimeout(static_cast<int>(keepalive * 1000));
 
 	return mx;
 }

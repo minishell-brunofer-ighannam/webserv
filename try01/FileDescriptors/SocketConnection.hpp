@@ -28,10 +28,11 @@ class SocketConnection: public Socket
 		std::string _out_headers;
 		size_t _out_headers_off;
 		FileChunkSource _out_file;
+		time_t _last_activity;
 
 	public:
 		SocketConnection(const Socket *listenner): Socket(FileDescriptorType::SOCKET_CONNECTION), _listenner(listenner),
-			_out_headers(), _out_headers_off(0)
+			_out_headers(), _out_headers_off(0), _last_activity(time(NULL))
 		{
 			socklen_t	len = _addr.size();
 			fd(accept(_listenner->fd(), _addr.ptr(), &len));
@@ -52,7 +53,7 @@ class SocketConnection: public Socket
 			std::cout << "client connected! fd: " << fd() << std::endl;
 		}
 		SocketConnection(const SocketConnection& other): Socket(other), _listenner(other._listenner),
-    		_out_headers(other._out_headers), _out_headers_off(other._out_headers_off)
+    		_out_headers(other._out_headers), _out_headers_off(other._out_headers_off),  _last_activity(time(NULL))
 		{ LOG_TRACE("copy contructor SocketConnection called " << other.fd() << "\n"); };
 
 		~SocketConnection(){
@@ -61,7 +62,10 @@ class SocketConnection: public Socket
 
 		const Socket	*listenner() const { return _listenner; }
 
-
+		void touch() { _last_activity = time(NULL); }
+		bool isExpired(time_t now, time_t timeout_secs) const {
+			return (now - _last_activity) > timeout_secs;
+		}
 		bool	hasPendingWrite() const
 		{
 			return _out_headers_off < _out_headers.size() || _out_file.isOpen();
